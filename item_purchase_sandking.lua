@@ -1,15 +1,16 @@
 
 
 local tableItemsToBuy = { 
-				"item_stout_shield", -------we need to sell it later
+				"item_stout_shield",
 				"item_tango",
-				"item_tango",
-				"item_tranquil_boots",
+				"item_boots",
+				"item_arcane_boots",
 				"item_blink",
-				"item_blade_mail",
-				"item_crimson_guard",
-				"item_shivas_guard",
-				"item_heart",
+				"item_veil_of_discord",
+				"item_pipe",
+				"item_assault",
+				"item_ultimate_scepter",
+				"item_guardian_greaves",
 			};
 
 

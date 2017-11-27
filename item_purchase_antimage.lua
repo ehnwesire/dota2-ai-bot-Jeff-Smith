@@ -1,15 +1,19 @@
 
 
 local tableItemsToBuy = { 
-				"item_stout_shield", -------we need to sell it later
+				"item_reaver",
 				"item_tango",
-				"item_tango",
-				"item_tranquil_boots",
-				"item_blink",
-				"item_blade_mail",
-				"item_crimson_guard",
-				"item_shivas_guard",
-				"item_heart",
+				"item_boots",
+				"item_ring_of_health",
+				"item_power_treads",
+				"item_bfury",
+				"item_sange",
+				"item_basher",
+				"item_manta",
+				"item_abyssal_blade",
+				"item_ultimate_scepter"
+				"item_butterfly",
+				"item_heart", ---------replace battle fury
 			};
 
 

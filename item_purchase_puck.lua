@@ -1,15 +1,17 @@
 
 
 local tableItemsToBuy = { 
-				"item_stout_shield", -------we need to sell it later
-				"item_tango",
-				"item_tango",
-				"item_tranquil_boots",
+				"item_null_talisman",
+   		             --"item_tango_single", -------- this is the shared tango, but how do we do that?
+				"item_boots",
+				"item_phase_boots", --------- Choose one you think it’s the best
+				"item_power_treads",  --------- Just Choose one of them
+				"item_veil_of_discord",
 				"item_blink",
-				"item_blade_mail",
-				"item_crimson_guard",
-				"item_shivas_guard",
-				"item_heart",
+				"item_sheepstick",
+				"item_dagon_#", ---------level 1-5 #is the level of item
+				"item_octarine_core",
+				"item_travel_boots_#",  ---------level 1-2
 			};
 
 

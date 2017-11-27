@@ -1,15 +1,22 @@
 
 
 local tableItemsToBuy = { 
-				"item_stout_shield", -------we need to sell it later
+				"item_courier",
 				"item_tango",
-				"item_tango",
-				"item_tranquil_boots",
-				"item_blink",
-				"item_blade_mail",
-				"item_crimson_guard",
-				"item_shivas_guard",
-				"item_heart",
+				"item_boots",
+				"item_clarity",
+				"item_arcane_boots",
+				"item_glimmer_cape",
+				"item_mekansm",
+				"item_medallion_of_courage",
+				--"item_hand_of_midas", --optional for now 
+				"item_blink", --optional
+				"item_aether_lens",
+				"item_cyclone",
+				"item_guardian_greaves",
+				"item_solar_crest",
+				"item_rod_of_atos",
+				--"item_force_staff", --optional 
 			};
 
 
