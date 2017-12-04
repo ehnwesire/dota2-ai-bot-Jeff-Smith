@@ -1,3 +1,11 @@
+----------------------------------------------------------------------------------------------------
+-- ability_item_usage_lina.lua
+-- IMPORTANT -- THIS CODE IS COPIED FROM VALVE'S EXAMPLE BOT SCRIPT --
+-- Author: KingleeBotSmiths 
+-- Smith Trey Email: benjtrey@163.com
+-- Smith Eric Email: looking4eric@outlook.com 
+-- Smith Jerry Email: j1059244837@icloud.com 
+----------------------------------------------------------------------------------------------------
 
 ----------------------------------------------------------------------------------------------------
 

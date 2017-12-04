@@ -1,6 +1,9 @@
-----Author: Kinglee Dota2 AI BOT Jeff Workteam----
-----Contact: Email: looking4eric@outlook.com Github: ehnwesire----
-
+----------------------------------------------------------------------------------------------------
+-- ability_item_usage_skeleton_king.lua
+-- Author: KingleeBotSmiths 
+-- Smith Trey Email: benjtrey@163.com
+-- Smith Eric Email: looking4eric@outlook.com 
+-- Smith Jerry Email: j1059244837@icloud.com
 --------------------------------------------------------------------------------------------------------------------
 --[[
 	Some reference:  

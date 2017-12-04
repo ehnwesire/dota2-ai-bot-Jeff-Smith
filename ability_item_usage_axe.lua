@@ -1,3 +1,11 @@
+----------------------------------------------------------------------------------------------------
+-- ability_item_usage_axe.lua
+-- Author: KingleeBotSmiths 
+-- Smith Trey Email: benjtrey@163.com
+-- Smith Eric Email: looking4eric@outlook.com 
+-- Smith Jerry Email: j1059244837@icloud.com 
+----------------------------------------------------------------------------------------------------
+
 castBCDesire = 0;
 castBHDesire = 0;
 castCBDesire = 0;
@@ -7,7 +15,6 @@ function AbilityUsageThink()
      local npcBot = GetBot();
 
      if ( npcBot:IsUsingAbility() ) then return end;
-	 --cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
      abilityBC = npcBot:GetAbilityByName( "axe_berserkers_call" ); 
 	 -- The Original name is Berserker’s Call, do we need to put in the ‘ ?
      abilityBH = npcBot:GetAbilityByName( "axe_battle_hunger" );

@@ -1,3 +1,11 @@
+----------------------------------------------------------------------------------------------------
+-- hero_selection.lua
+-- Author: KingleeBotSmiths 
+-- Smith Trey Email: benjtrey@163.com
+-- Smith Eric Email: looking4eric@outlook.com 
+-- Smith Jerry Email: j1059244837@icloud.com 
+----------------------------------------------------------------------------------------------------
+
 function Think()
 
 team1 = {"npc_dota_hero_skeleton_king", "npc_dota_hero_lina", "npc_dota_hero_axe",
