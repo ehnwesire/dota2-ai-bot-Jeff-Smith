@@ -1,1 +1,2 @@
-function Think ()
+function AbilityUsageThink()
+

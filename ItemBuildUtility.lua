@@ -1,14 +1,28 @@
+----------------------------------------------------------------------------------------------------
+-- The script was taken from adamqqq's Ranked Matchmaking AI Bot
+-- The KingleeBotSmiths certify that they didn't create this work
+-- ItemBuildUtility.lua 
+-- Used by KingleeBotSmiths
+-- Smith Trey Email: benjtrey@163.com
+-- Smith Eric Email: looking4eric@outlook.com 
+-- Smith Jerry Email: j1059244837@icloud.com
+----------------------------------------------------------------------------------------------------
+--	Ranked Matchmaking AI v1.0a
+--	Author: adamqqq		Email:adamqqq@163.com
+----------------------------------------------------------------------------------------------------
+
 local X = {}
 
 --Change to false to disable random talent choice
-local rand = true;
+local rand = false;
 
 function X.FillTalenTable(npcBot)
 	local talents = {};
 	for i = 0, 23 
 	do
 		local ability = npcBot:GetAbilityInSlot(i);
-		if ability ~= nil and ability:IsTalent() then
+		if ability ~= nil and ability:IsTalent() 
+		then
 			table.insert(talents, ability:GetName());
 		end
 	end
@@ -57,6 +71,7 @@ function X.GetBuildPattern(status, s, skills, t, talents)
 				skills[s[14]],    	"-1",      	  skills[s[15]],    	"-1",   	talents[RandomInt(5,6)],
 					"-1",   		"-1",   		"-1",       		"-1",       talents[RandomInt(7,8)]
 			}
+		--The part that is supposed to work because we have disabled the random selection
 		else
 			return {
 				skills[s[1]],    skills[s[2]],    skills[s[3]],    skills[s[4]],    skills[s[5]],
@@ -66,43 +81,7 @@ function X.GetBuildPattern(status, s, skills, t, talents)
 					"-1",   		"-1",   		"-1",       		"-1",       talents[t[4]]
 			}
 		end
-	elseif status == "invoker" then
-		if rand then
-			return {
-				skills[s[1]],    skills[s[2]],    skills[s[3]],    skills[s[4]],    skills[s[5]],
-				skills[s[6]],    skills[s[7]],    skills[s[8]],    skills[s[9]],    talents[RandomInt(1,2)],
-				skills[s[10]],   skills[s[11]],   skills[s[12]],   skills[s[13]],   talents[RandomInt(3,4)],
-				skills[s[14]],   skills[s[15]],	  skills[s[16]],   skills[s[17]],	talents[RandomInt(5,6)],
-				skills[s[18]],   skills[s[19]],   skills[s[20]],   skills[s[21]],   talents[RandomInt(7,8)]
-			}
-		else
-			return {
-				skills[s[1]],    skills[s[2]],    skills[s[3]],    skills[s[4]],    skills[s[5]],
-				skills[s[6]],    skills[s[7]],    skills[s[8]],    skills[s[9]],    talents[t[1]],
-				skills[s[10]],   skills[s[11]],   skills[s[12]],   skills[s[13]],   talents[t[2]],
-				skills[s[14]],   skills[s[15]],	  skills[s[16]],   skills[s[17]],	talents[t[3]],
-				skills[s[18]],   skills[s[19]],   skills[s[20]],   skills[s[21]],   talents[t[4]]
-			}
-		end
-	elseif status == "meepo" then
-		if rand then
-			return {
-				skills[s[1]],    skills[s[2]],    skills[s[3]],    skills[s[4]],    skills[s[5]],
-				skills[s[6]],    skills[s[7]],    skills[s[8]],    skills[s[9]],    skills[s[10]],
-	  talents[RandomInt(1,2)],   skills[s[11]],   skills[s[12]],   skills[s[13]],   talents[RandomInt(3,4)],
-				skills[s[14]],   skills[s[15]],		"-1",    			"-1",   	talents[RandomInt(5,6)],
-					"-1",   		"-1",   		"-1",       		"-1",       talents[RandomInt(7,8)]
-			}
-		else
-			return {
-				skills[s[1]],    skills[s[2]],    skills[s[3]],    skills[s[4]],    skills[s[5]],
-				skills[s[6]],    skills[s[7]],    skills[s[8]],    skills[s[9]],    skills[s[10]],
-				talents[t[1]],   skills[s[11]],   skills[s[12]],   skills[s[13]],   talents[t[2]],
-				skills[s[14]],   skills[s[15]],		"-1",    			"-1",   	talents[t[3]],
-					"-1",   		"-1",   		"-1",       		"-1",       talents[t[4]]
-			}
-		end
-	end	
+	end
 end
 
 return X;

@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------------------------------------
--- This file was taken from adamqqq's Ranked Matchmaking AI file and the KingleeBotSmiths certify that they didn' create this script
--- utiity.lua 
--- Author: adamqqq
+-- The script was taken from adamqqq's Ranked Matchmaking AI Bot
+-- The KingleeBotSmiths certify that they didn't create this work
+-- utility.lua 
 -- Used by KingleeBotSmiths
 -- Smith Trey Email: benjtrey@163.com
 -- Smith Eric Email: looking4eric@outlook.com 

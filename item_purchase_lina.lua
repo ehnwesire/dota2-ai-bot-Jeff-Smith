@@ -1,7 +1,16 @@
-----------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+-- The script was taken from adamqqq's Ranked Matchmaking AI Bot
+-- The KingleeBotSmiths certify that they didn't create this work
+-- item_purchase_lina.lua 
+-- Used by KingleeBotSmiths
+-- Smith Trey Email: benjtrey@163.com
+-- Smith Eric Email: looking4eric@outlook.com 
+-- Smith Jerry Email: j1059244837@icloud.com
+----------------------------------------------------------------------------------------------------
 --	Ranked Matchmaking AI v1.0a
 --	Author: adamqqq		Email:adamqqq@163.com
-----------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+
 require( GetScriptDirectory().."/utility" ) 
 
 local ItemsToBuy = 
