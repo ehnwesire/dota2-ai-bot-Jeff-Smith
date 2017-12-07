@@ -9,53 +9,60 @@
 castCNDesire = 0;
 castFDesire = 0;
 castFFDesire = 0;
- 
+
+----------------------------------------------------------------------------------------------------
+
 function AbilityUsageThink()
- 
-     local npcBot = GetBot();
 
-     if ( npcBot:IsUsingAbility() ) then return end;
-     abilityCN = npcBot:GetAbilityByName( "crystal_maiden_crystal_nova" );  -- target area
-     abilityF = npcBot:GetAbilityByName( "crystal_maiden_frostbite" );  --target unit
-     abilityFF = npcBot:GetAbilityByName( "crystal_maiden_freezing_field" ); --no target/ channeled
-    
+	local npcBot = GetBot();
 
-     castCNDesire, castCNLocation = ConsiderCrystalNova();
-     castFDesire, castFTarget = ConsiderFrostbite();
-     castFFDesire = ConsiderFreezingField();
+	--Check if we're already usiing an ability or (channeling)
+    if ( npcBot:IsUsingAbility() ) --or npcBot:IsChanneling()
+	then 
+		return 
+	end; 
+    abilityCN = npcBot:GetAbilityByName( "crystal_maiden_crystal_nova" );  -- target area
+    abilityF = npcBot:GetAbilityByName( "crystal_maiden_frostbite" );  --target unit
+    abilityFF = npcBot:GetAbilityByName( "crystal_maiden_freezing_field" ); --no target/ channeled
+	
+	--Considering to use each ability
+    castCNDesire, castCNLocation = ConsiderCrystalNova();
+    castFDesire, castFTarget = ConsiderFrostbite();
+    castFFDesire = ConsiderFreezingField();
+	
+	--Considering Freezing Field with a higher priority 
+    if ( castFFDesire > castFDesire and castFFDesire > castCNDesire )
+    then
+		npcBot:Action_UseAbility( abilityFF );
+		return;
+	end
  
-     if ( castFFDesire > castFDesire and castFFDesire > castCNDesire )
-     then
-           npcBot:Action_UseAbility( abilityFF );
-           return;
-     end
+    if ( castCNDesire > 0 )
+    then
+		npcBot:Action_UseAbilityOnLocation( abilityCN, castCNLocation );
+        return;
+    end
  
-     if ( castCNDesire > 0 )
-     then
-           npcBot:Action_UseAbilityOnLocation( abilityCN, castCNLocation );
-           return;
-     end
- 
-     if ( castFDesire > 0 )
-     then
-           npcBot:Action_UseAbilityOnEntity( abilityF, castFTarget );
-           return;
-     end
+    if ( castFDesire > 0 )
+    then
+		npcBot:Action_UseAbilityOnEntity( abilityF, castFTarget );
+		return;
+    end
  
 end
  
 ----------------------------------------------------------------------------------------------------
- 
-function CanCastFrostbiteOnTarget( npcTarget )
-     return npcTarget:CanBeSeen() and not npcTarget:IsMagicImmune() and not npcTarget:IsInvulnerable();
-end
-
-function CanCastFreezingFieldTarget( ) ----no target skill
-     return npcTarget:CanBeSeen() and not npcTarget:IsMagicImmune() and not npcTarget:IsInvulnerable();
-end
 
 function CanCastCrystalNovaTarget( npcTarget )
-     return npcTarget:CanBeSeen() and not npcTarget:IsMagicImmune() and not npcTarget:IsInvulnerable();
+    return npcTarget:CanBeSeen() and not npcTarget:IsMagicImmune() and not npcTarget:IsInvulnerable();
+end
+
+function CanCastFrostbiteOnTarget( npcTarget )
+    return npcTarget:CanBeSeen() and not npcTarget:IsMagicImmune() and not npcTarget:IsInvulnerable();
+end
+
+function CanCastFreezingFieldTarget( ) --no target skill
+    return npcTarget:CanBeSeen() and not npcTarget:IsMagicImmune() and not npcTarget:IsInvulnerable();
 end
 
 ----------------------------------------------------------------------------------------------------
@@ -97,6 +104,7 @@ function ConsiderFrostbite()
 
      return BOT_ACTION_DESIRE_NONE, 0;
 end
+
 ----------------------------------------------------------------------------------------------------
 
 function ConsiderFreezingField() 
@@ -129,6 +137,7 @@ local npcBot = GetBot();
 
      return BOT_ACTION_DESIRE_NONE, 0;
 end
+
 --------------------------------------------------------------------------------------------------
  
 function ConsiderCrystalNova() 
@@ -139,7 +148,6 @@ function ConsiderCrystalNova()
      if ( not abilityCN:IsFullyCastable() ) then
            return BOT_ACTION_DESIRE_NONE, 0;
      end
-
 
 -- I want to do some ambitious code here. High risk.
 local FnCastRange = abilityF:GetCastRange();
@@ -166,3 +174,4 @@ local CNDamage = math.floor ( nEstimatedDamageToTarget );
      return BOT_ACTION_DESIRE_NONE, 0;
 end
 
+----------------------------------------------------------------------------------------------------

@@ -7,8 +7,6 @@
 -- Smith Jerry Email: j1059244837@icloud.com 
 ----------------------------------------------------------------------------------------------------
 
-----------------------------------------------------------------------------------------------------
-
 castLBDesire = 0; 
 castLSADesire = 0;
 castDSDesire = 0;
@@ -22,7 +20,6 @@ function AbilityUsageThink()
 	
 	abilityLSA = npcBot:GetAbilityByName( "lina_light_strike_array" );
 	abilityDS = npcBot:GetAbilityByName( "lina_dragon_slave" ); --slave???
-
 	abilityLB = npcBot:GetAbilityByName( "lina_laguna_blade" );
 	-- Consider using each ability
 	castLBDesire, castLBTarget = ConsiderLagunaBlade();

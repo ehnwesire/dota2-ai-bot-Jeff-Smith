@@ -179,6 +179,7 @@ function ConsiderHellfireBlast()
 --------------------------------------------------------------------------------------------------------------------
 
 --This should be it for now, but we will always add more codes for maximum improvements
+--UPDATE: Skeleton king should open the vampire aura when the active mode is pushing so that the creeps last longer. 
 
 --------------------------------------------------------------------------------------------------------------------
 end
