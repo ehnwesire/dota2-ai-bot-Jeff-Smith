@@ -11,18 +11,26 @@
 --	Author: adamqqq		Email:adamqqq@163.com
 ----------------------------------------------------------------------------------------------------
 
+--initializing an array? or array list?
+--the {} thing is associated with "table"
 local X = {}
 
 --Change to false to disable random talent choice
 local rand = false;
 
+--calls the npcBot and what is "fill talent table"?
+--CONCLUSION: This returns the ability slots that are supoosed to be talents 
 function X.FillTalenTable(npcBot)
 	local talents = {};
+	--why is this 0, 23? 1 + 23 = 25 is fair enough
 	for i = 0, 23 
 	do
+		--API: Gets a handle to ability in the specified slot. Slots range from 0 to 23.
 		local ability = npcBot:GetAbilityInSlot(i);
+		--still need to specify the use of ~= 
 		if ability ~= nil and ability:IsTalent() 
 		then
+			--what does ability:GetName() return?
 			table.insert(talents, ability:GetName());
 		end
 	end
@@ -34,6 +42,7 @@ function X.FillSkillTable(npcBot, slots)
 	for _,slot in pairs(slots)
 	do
 		table.insert(skills, npcBot:GetAbilityInSlot(slot):GetName());
+		--returns the four ability names as an array of 4 strings
 	end
 	return skills;
 end
@@ -60,6 +69,8 @@ function X.GetSlotPattern(nPattern)
 	end
 end
 
+--s is the array of 1,2,3,4,1,1,1,1,4,4,5,5,5, like this 
+--skills: returns the four ability names as an array of 4 strings
 function X.GetBuildPattern(status, s, skills, t, talents)
 	if status == "normal" 
 	then
