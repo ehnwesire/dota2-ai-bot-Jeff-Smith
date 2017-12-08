@@ -11,26 +11,30 @@
 --	Author: adamqqq		Email:adamqqq@163.com
 ----------------------------------------------------------------------------------------------------
 
---initializing an array? or array list?
---the {} thing is associated with "table"
+--Initializing an array as the return value; used in the itembuildfiles as the prefixof functions 
+--The {} thing is associated with table. commands
 local X = {}
 
---Change to false to disable random talent choice
+--Changed to false for disabling adamqqq's random talent choice
 local rand = false;
 
---calls the npcBot and what is "fill talent table"?
---CONCLUSION: This returns the ability slots that are supoosed to be talents 
+--FillTalenTable returns an array of the heroes' talents in the talent tree as strings 
+--FIRST CONCLUSION: This returns the ability slots that are supoosed to be talents 
 function X.FillTalenTable(npcBot)
 	local talents = {};
-	--why is this 0, 23? 1 + 23 = 25 is fair enough
 	for i = 0, 23 
 	do
-		--API: Gets a handle to ability in the specified slot. Slots range from 0 to 23.
+		--API Reference: Gets a handle to ability in the specified slot. Slots range from 0 to 23.
 		local ability = npcBot:GetAbilityInSlot(i);
-		--still need to specify the use of ~= 
+		--Still need to specify the use of ~=
+		--Supposing that ability ~= nil is TRUE. 
+		--IsTalent: Returns a bool value of whether if the ability is a talent
+		--IsTalent is not recorded in the official API but was found in another API
 		if ability ~= nil and ability:IsTalent() 
 		then
-			--what does ability:GetName() return?
+			--What does ability:GetName() return?
+			--Returns a string of the hero's ability name
+			--In talents 
 			table.insert(talents, ability:GetName());
 		end
 	end
@@ -39,6 +43,10 @@ end
 
 function X.FillSkillTable(npcBot, slots)
 	local skills = {};
+	--for in pairs examines the whole table by some sort of random order
+	--local skills  = IBUtil.FillSkillTable(npcBot, IBUtil.GetSlotPattern(1));
+	--GetSlotPattern is assigned 0 1 2 3, so this gets the four abilities in the hero's four ability slots
+	--this should be in the chronological order becaus 
 	for _,slot in pairs(slots)
 	do
 		table.insert(skills, npcBot:GetAbilityInSlot(slot):GetName());
@@ -48,29 +56,52 @@ function X.FillSkillTable(npcBot, slots)
 end
 
 function X.GetSlotPattern(nPattern)
-	if nPattern == 1 then
+	--Returning the slot patterns of certain herores. 
+	--Different values of the nPattern are for the heroes' different slot patterns 
+	--Some examples would be meepo, invoker, elder titan, ember spritit
+	--For specifications search all files of adamqqq's bot
+	--Jeff Smith will temporarily take nPattern 1 to use because the 5 heroes
+	--have the same type of slotpattern (ab, ab, ab, ult)
+	--what's cool about the numbering convention here is 
+	--array's COUNTINGS start with [1], like in GetBuildPattern we are using 
+	--skills[s[1]], with s[1] indicating a 1, which equals to skills[1]
+	--but when the measurements, or COUNTINGS, are actually done WITHIN the game 
+	--the code starts to use 0 as the start.
+	--SO the point here is that one number in an array could have 2 meanings
+	--beased on its position and value, and that has been why these lines of codes
+	--could be pretty hard for the Smiths to understand. 
+	--Suppose that nPattern 2-9 are negligable, because the 5 heores all use
+	--nPattern = 1 
+	if ( nPattern == 1 ) 
+	then
 		return {0,1,2,3};
-	elseif  nPattern == 2 then
-		return {0,1,3,4};
-	elseif  nPattern == 3 then
-		return {0,1,2,5};	
-	elseif  nPattern == 4 then
-		return {0,1,2,4};
-	elseif  nPattern == 5 then
-		return {0,1,2};	
-	elseif  nPattern == 6 then
-		return {0,1,4,7};		
-	elseif  nPattern == 7 then
-		return {0,3,4,5};	
-	elseif  nPattern == 8 then
-		return {0,2,3,6};	
-	elseif  nPattern == 9 then
-		return {0,1,3,8};		
 	end
 end
 
---s is the array of 1,2,3,4,1,1,1,1,4,4,5,5,5, like this 
+--status is an indication of the hero type. by all means we will not really have 
+--any meepos or invokers in our bot so we deleted the part where it says 
+--status = "meepo" or "invoker"
+--s: the array of 1,2,3,4,1,1,1,1,4,4,5,5,5, like this 
+--s declares how the bot levels up abilities by returning values of 1-4 when called
+--MARK: The numbering convention issue shows up when i suppose that it returns 0-3
 --skills: returns the four ability names as an array of 4 strings
+--t: the array of {1,4,5,7} that indicates how the hero wants to 
+--level up its abilities
+--talents: returns all talents on the talent tree as an array of 8 strings
+--the point of the code is that while reading, developers should take account
+--of what the 5 parameters indicate and their forms as arrays of integers or strings
+--starting with s[1], since the array's first value, or element is a 1, thus it would
+--return the value of 1 back when its called. so the parameter becomes skills[1] now.
+--skills[1], then, returns the name of the corresponding hero's ability as a string.
+--the same methos applies for talents also.
+--Selecting the talents randomly might help because Dota2 is an unpredictable game
+--when the hero doesn't have an ability point take "-1", as as a string, like the other
+--parameters, into the array.
+--the whole function works by a returning a final value of an array made up of 
+--each ability(strings) to level up at each level in chronological order  
+--when theres a talent available then the talent strings would take place instead.
+--OK, that's basically it
+
 function X.GetBuildPattern(status, s, skills, t, talents)
 	if status == "normal" 
 	then

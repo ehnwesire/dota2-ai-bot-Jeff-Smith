@@ -17,6 +17,7 @@ local IBUtil = require(GetScriptDirectory() .. "/ItemBuildUtility");
 local npcBot = GetBot();
 local talents = IBUtil.FillTalenTable(npcBot);
 local skills  = IBUtil.FillSkillTable(npcBot, IBUtil.GetSlotPattern(1));
+--returns an array of the 4 abilities as strings 
 
 X["items"] = { 
 	"item_magic_wand",
