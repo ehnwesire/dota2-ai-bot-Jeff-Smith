@@ -66,11 +66,11 @@ function ConsiderAphoticShield() -- This skill gives ally hero a sheild and also
            return BOT_ACTION_DESIRE_NONE, 0;
      end;
  
-     local nCastRange = abilityAS:GetCastRange()
+     local ASCastRange = abilityAS:GetCastRange()
      local npcTarget = npcBot:GetTarget()
      if ( npcTarget ~= nil and CanCastAphoticShieldOnTarget( npcTarget ) )
      then
-           if ( npcTarget:GetHealth() <= 400 and UnitToUnitDistance( npcTarget, npcBot ) <= ( nCastRange ) )
+           if ( npcTarget:GetHealth() <= 400 and UnitToUnitDistance( npcTarget, npcBot ) <= ( ASCastRange ) )
            then
                 return BOT_ACTION_DESIRE_VERYHIGH, npcTarget;
 				--We want Abaddon to save his allies by casting AS in them.
@@ -80,7 +80,7 @@ function ConsiderAphoticShield() -- This skill gives ally hero a sheild and also
      local tableHelplessAllies = npcBot:GetNearbyHeroes( nRadius + 200, false, BOT_MODE_NONE );
      for _,npcAlly in pairs( tableHelplessAllies ) --the line's code is hard to understand, in pairs
      do
-          if ( npcAlly:IsBlind() and npcAlly:IsDisarmed() and npcAlly:IsHexed() and npcAlly:IsMuted() and npcAlly:IsRooted() and npcAlly:IsSilenced()and npcAlly:IsStunned() ) 
+          if ( npcAlly:IsBlind() or npcAlly:IsDisarmed() or npcAlly:IsHexed() and npcAlly:IsMuted() and npcAlly:IsRooted() and npcAlly:IsSilenced()and npcAlly:IsStunned() ) 
 		  --ATTENTION!  This logic is amazing!but should we connect them w/ 'and' or 'or'? And more, 
 		  --check this : IsSpeciallyDeniable() (Returns whether the unit is deniable by allies due to a debuff.) 
 		  --I want to use this code! Where should we put it? Leave enemy no chance for kill!
@@ -92,24 +92,25 @@ end
 ----------------------------------------------------------------------------------------------------
 
 function ConsiderMistCoil()  -- this skill use health to cause damage/heal to enemy/ally
--- use this skill to deny himslef    use this skill during 'Borrowed Time'
--- use this skill to deny himslef    use this skill during 'Borrowed Time'
--- use this skill to deny himslef    use this skill during 'Borrowed Time'
--- use this skill to deny himslef    use this skill during 'Borrowed Time'
--- use this skill to deny himslef    use this skill during 'Borrowed Time'
--- use this skill to deny himslef    use this skill during 'Borrowed Time'
+
 
 local npcBot = GetBot();
- 
-     if ( npcBot:GetHealth() <= 150 and UnitToUnitDistance( npcTarget, npcBot ) <= ( nCastRange ) )
+local npcTarget = npcBot:GetTarget()
+local MCCastRange = abilityMC:GetCastRange()
+
+     if ( npcBot:GetHealth() <= 150 and UnitToUnitDistance( npcTarget, npcBot ) <= ( nCastRange ) ) --if abaddon's health is low and enemy is insight, deny himself.
            then
                 return BOT_ACTION_DESIRE_VERYHIGH, npcTarget;
-	end;
-	
-     if ( not abilityBC:IsFullyCastable() ) then
-           return BOT_ACTION_DESIRE_NONE, 0;
      end;
- 
+	
+     local tableLowHealthAllies = npcBot:GetNearbyHeroes( nRadius, false, BOT_MODE_NONE ); -- Use skill to heal Ally when own health is in a good shape.
+     for _,npcAlly in pairs( tableLowHealthAllies ) 
+     do 
+	     if ( npcAlly:GetHealth() <= 300 and ( npcBot:GetHealth() / npcBot:GetMaxHealth() > 0.8 ) )
+         then 
+		        return BOT_ACTION_DESIRE_MEDIUM, npcAlly;
+		 end
+	 end
       if ( castASDesire > 0 )  --usually using AS is the priority
      then
            return BOT_ACTION_DESIRE_NONE, 0;
@@ -128,7 +129,7 @@ local npcBot = GetBot();
                      return BOT_ACTION_DESIRE_LOW, npcTarget;
                 end
 				
-				if ( npcTarget:GetHealth < BHDamage + 100 )
+				if ( npcTarget:GetHealth < BHDamage + 100 ) 
 				then
 					return BOT_ACTION_DESIRE_HIGH, npcTarget; 
 				end
@@ -148,7 +149,7 @@ local npcBot = GetBot();
            npcBot:GetActiveMode() == BOT_MODE_DEFEND_TOWER_TOP )
 		 if ( npcTarget:GetHealth() / npcTarget:GetMaxHealth() > 0.6 )
 		 then
-			if ( ( npcBot:GetHealth() / npcBot:GetMaxHealth() > 0.8) and ( npcBot:GetMana() / npcBot:GetMaxMana() > 0.6)
+			if ( ( npcBot:GetHealth() / npcBot:GetMaxHealth() > 0.8) and ( npcBot:GetMana() / npcBot:GetMaxMana() > 0.6 ) )
 			then
 				return BOT_ACTION_DESIRE_MEDIUM, npcTarget; 
 			end
@@ -160,18 +161,11 @@ end
 
 ----------------------------------------------------------------------------------------------------
  
-function ConsiderBorrowedTime()  -- This skill regens every damage absorbed.
+--function ConsiderBorrowedTime()  -- This skill regens every damage absorbed.
 --The condition we use this actively: 
 --we estimate upcoming damage, if it will be really high, we triger ultimate actively to absorb all the damage.
 -- reason: usually when fight starts, tons of damage will be dealt at the beginning, then there will be a period which has less damgage occurs becuase every hero is waiting for cooldown.
 -- now if you get me.
- 
-     local npcBot = GetBot();
- 
-     if ( castASDesire > 0 )
-     then
-           return BOT_ACTION_DESIRE_NONE, 0;
-end
-
+--I mean What The Heck     lets not edit this Ulti because its self-castable.
 
 
