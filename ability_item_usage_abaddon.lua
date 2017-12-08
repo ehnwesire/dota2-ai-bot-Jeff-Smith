@@ -92,7 +92,7 @@ end
 
 ----------------------------------------------------------------------------------------------------
 
-function ConsiderMistCoil()  -- this skill cause damage to user himself 
+function ConsiderMistCoil()  -- this skill use health to cause damage/heal to enemy/ally
 -- use this skill to deny himslef    use this skill during 'Borrowed Time'
 -- use this skill to deny himslef    use this skill during 'Borrowed Time'
 -- use this skill to deny himslef    use this skill during 'Borrowed Time'
@@ -100,8 +100,15 @@ function ConsiderMistCoil()  -- this skill cause damage to user himself
 -- use this skill to deny himslef    use this skill during 'Borrowed Time'
 -- use this skill to deny himslef    use this skill during 'Borrowed Time'
 
+
+
 local npcBot = GetBot();
  
+     if ( npcBot:GetHealth() <= 150 and UnitToUnitDistance( npcTarget, npcBot ) <= ( nCastRange ) )
+           then
+                return BOT_ACTION_DESIRE_VERYHIGH, npcTarget;
+	end;
+	
      if ( not abilityBC:IsFullyCastable() ) then
            return BOT_ACTION_DESIRE_NONE, 0;
      end;
