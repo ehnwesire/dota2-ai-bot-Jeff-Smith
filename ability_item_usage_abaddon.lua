@@ -12,37 +12,37 @@ castBTDesire = 0;
  
 function AbilityUsageThink()
  
-     local npcBot = GetBot();
+    local npcBot = GetBot();
 
-     if ( npcBot:IsUsingAbility() ) then return end;
+    if ( npcBot:IsUsingAbility() ) then return end;
 
-     abilityMC = npcBot:GetAbilityByName( "abaddon_mist_coil" ); 
-     abilityAS = npcBot:GetAbilityByName( "abaddon_aphotic_shield" );
-     abilityBT = npcBot:GetAbilityByName( "abaddon_borrowed_time" );
+    abilityMC = npcBot:GetAbilityByName( "abaddon_mist_coil" ); 
+    abilityAS = npcBot:GetAbilityByName( "abaddon_aphotic_shield" );
+    abilityBT = npcBot:GetAbilityByName( "abaddon_borrowed_time" );
     
 
-     castMCDesire, castMCTarget = ConsiderMistCoil();
-     castASDesire, castASTarget = ConsiderAphoticShield();
-     castBTDesire= ConsiderBorrowedTime();
+    castMCDesire, castMCTarget = ConsiderMistCoil();
+    castASDesire, castASTarget = ConsiderAphoticShield();
+    castBTDesire= ConsiderBorrowedTime(); 
  
-     if ( castASDesire > castBTDesire and castASDesire > castMCDesire )
-     then
-           npcBot:Action_UseAbilityOnEntity( abilityAS, castASTarget );
-           return;
-     end
+	if ( castASDesire > castBTDesire and castASDesire > castMCDesire )
+    then
+		npcBot:Action_UseAbilityOnEntity( abilityAS, castASTarget );
+        return;
+    end
  
     if ( castBTDesire > 0.6 )
-     then
-           npcBot:Action_UseAbility( abilityBT ); -- actively trigger the ultimate
-           return;
-     end
+    then
+        npcBot:Action_UseAbility( abilityBT ); -- actively trigger the ultimate
+        return;
+    end
  
-     if ( castMCDesire > 0 )
-     then
-           npcBot:Action_UseAbilityOnEntity( abilityMC, castMCTarget );
-           return;
-     end
- 
+    if ( castMCDesire > 0 )
+    then
+        npcBot:Action_UseAbilityOnEntity( abilityMC, castMCTarget );
+        return;
+    end
+
 end
  
 ----------------------------------------------------------------------------------------------------
@@ -99,8 +99,6 @@ function ConsiderMistCoil()  -- this skill use health to cause damage/heal to en
 -- use this skill to deny himslef    use this skill during 'Borrowed Time'
 -- use this skill to deny himslef    use this skill during 'Borrowed Time'
 -- use this skill to deny himslef    use this skill during 'Borrowed Time'
-
-
 
 local npcBot = GetBot();
  
