@@ -20,7 +20,6 @@ function AbilityUsageThink()
     abilityAS = npcBot:GetAbilityByName( "abaddon_aphotic_shield" );
     abilityBT = npcBot:GetAbilityByName( "abaddon_borrowed_time" );
     
-
     castMCDesire, castMCTarget = ConsiderMistCoil();
     castASDesire, castASTarget = ConsiderAphoticShield();
     castBTDesire= ConsiderBorrowedTime(); 
