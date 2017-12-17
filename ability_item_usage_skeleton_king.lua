@@ -39,12 +39,15 @@
 	BOT_MODE_ROSHAN
 	BOT_MODE_ITEM
 	BOT_MODE_WARD
+	
+	Hi jasmine: hey old man
 ]]--
 
 --------------------------------------------------------------------------------------------------------------------
 
 --Just the desire variable to cast spells... nothing really 
 castHBDesire = 0;
+castMSDesire = 0;
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -55,14 +58,16 @@ function AbilityUsageThink()
 	--Check if we are already using an ability or channeling 
 	if ( npcBot:IsUsingAbility() and npcBot:IsChanneling() )
 	then
-		return 
+		return;
 	end
 	
 	--Getting the handle to skeleton's only active ability (maybe lul)
 	abilityHB = npcBot:GetAbilityByName( "skeleton_king_hellfire_blast" ); 
+	abilityMS = npcBot:GetAbilityByName( "skeleton_king_mortal_strike" );
 	
 	--Setting the desire to cast hellfire blast and intended target as return values of the function for later use 
 	castHBDesire, castHBTarget = ConsiderHellfireBlast(); 
+	castMSDesire = ConsiderMortalStrike();
 	
 	--If we have some desire for casting hellfire blast, cast it (on the target)
 	if ( castHBDesire > 0 )
@@ -70,6 +75,14 @@ function AbilityUsageThink()
 		npcBot:Action_UseAbilityOnEntity( abilityHB, castHBTarget );
 		return; 
 	end
+	
+	--Considering to cast mortal strike with high desires because it might be a waste of mana...?
+	if ( castMSDesire > 0.6 )
+	then
+		npcBot:Action_UseAbility( abilityMS );
+		return; 
+	end
+
 end
 
 --------------------------------------------------------------------------------------------------------------------
@@ -180,6 +193,20 @@ function ConsiderHellfireBlast()
 
 --This should be it for now, but we will always add more codes for maximum improvements
 --UPDATE: Skeleton king should open the vampire aura when the active mode is pushing so that the creeps last longer. 
+--UPDATE: Skeleton king's third ability is now usable. I was playing this hero yesterday
+--and I found that the ability could call cute little skeleton creeps out, for pushing maybe? 
+--UPDATE: Skeleton king's mana is really restricted before he purchases echo sabre or intelligence-boost items 
+--basically his mana can only support 1 hellfire blast + 1 reincarnation
+
+--------------------------------------------------------------------------------------------------------------------
+
+-- function Consider
+-- OK, so for that random third ability, my idea is that we should only consider casting it when the bot is pushing
+-- From my gameplays i think that this stupid ability needs to gather charges for a long time to get more skeletons 
+-- While pushing once i casted this ability i need to start minding my mana for reincarnation. 
+-- How about when the bot is pushing alone? When theres no enemy heroes present aroun? 
+-- The easiest way to do this should be writing multiple if statemtents within one if. 
+-- Anyways try to work hard...
 
 --------------------------------------------------------------------------------------------------------------------
 end

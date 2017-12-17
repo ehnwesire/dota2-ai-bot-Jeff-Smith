@@ -9,7 +9,7 @@
 function Think()
 
 team1 = {"npc_dota_hero_skeleton_king", "npc_dota_hero_lina", "npc_dota_hero_axe",
-"npc_dota_hero_dazzle", "npc_dota_hero_crystal_maiden"};
+"npc_dota_hero_abaddon", "npc_dota_hero_crystal_maiden"};
 team2 = {"npc_dota_hero_sniper", "npc_dota_hero_drow_ranger", "npc_dota_hero_earthshaker",
 "npc_dota_hero_enigma", "npc_dota_hero_sandking"};
 
