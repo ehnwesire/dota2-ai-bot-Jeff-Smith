@@ -58,7 +58,7 @@ function AbilityUsageThink()
     if ( npcBot:IsUsingAbility() or npcBot:IsChanneling() ) --or npcBot:IsChanneling()
 	then 
 		return;
-	end; 
+	end
     abilityCN = npcBot:GetAbilityByName( "crystal_maiden_crystal_nova" );  -- target area
     abilityF = npcBot:GetAbilityByName( "crystal_maiden_frostbite" );  --target unit
     abilityFF = npcBot:GetAbilityByName( "crystal_maiden_freezing_field" ); --no target/ channeled
@@ -68,7 +68,7 @@ function AbilityUsageThink()
     castFDesire, castFTarget = ConsiderFrostbite();
     castFFDesire = ConsiderFreezingField();
 	
-	--Considering Freezing Field with a higher priority 
+	--Considering to cast freezing field with a higher priority because its cool 
     if ( castFFDesire > castFDesire and castFFDesire > castCNDesire )
     then
 		npcBot:Action_UseAbility( abilityFF );
@@ -104,20 +104,22 @@ function CanCastFreezingFieldTarget( ) --no target skill
     return npcTarget:CanBeSeen() and not npcTarget:IsMagicImmune() and not npcTarget:IsInvulnerable();
 end
 
+--The global function used to check availability of casting the spell 
+function CanCastSpellOnTarget ( npcTarget )
+	return npcTarget:CanBeSeen() and not npcTarget:IsMagicImmune() and not npcTarget:IsInvulnerable();
+end
 ----------------------------------------------------------------------------------------------------
  
 function ConsiderFrostbite()
  
     local npcBot = GetBot();
-	 
-	--If the ability is not castable, do nothing at all
+	--If we can't cast Frostbite, do nothing at all
     if ( not abilityF:IsFullyCastable() )
     then
 		return BOT_ACTION_DESIRE_NONE, 0;
     end;
 	
-	
-	--If we want to cast freezing field then consider freezing field first 
+	--If we want to cast freezing field more then consider freezing field first 
     if ( castFFDesire > 0 )
     then
 		return BOT_ACTION_DESIRE_NONE, 0;
@@ -127,6 +129,7 @@ function ConsiderFrostbite()
     local nCastRange = abilityF:GetCastRange();
     local nDuration = abilityF:GetDuration();
 	--How about let's try GetAbilityDamage?
+	local FBDamage = abilityF:GetAbilityDamage();
     local nEstimatedDamageToTarget = npcBot:GetEstimatedDamageToTarget( true, npcTarget, nDuration, DAMAGE_TYPE_MAGICAL  );
 	--[[
 	float GetEstimatedDamageToTarget( bCurrentlyAvailable, hTarget, fDuration, nDamageTypes )
@@ -134,33 +137,37 @@ function ConsiderFrostbite()
 	If bCurrentlyAvailable is true, it takes into account mana and cooldown status
 	--]]
 	--GetEstimatedDamageToTarget returns the UNIT's damage, not an ABILITY's one.
+	--Should be useful when we calculate how dangerousity(?) of an enemy 
     local eDamageType = DAMAGE_TYPE_MAGICAL;
     local tableNearbyAllyHeroes = npcBot:GetNearbyHeroes( 800, false, BOT_MODE_NONE)
 	--There was an undefined nRadius in the parameter... ( nRadius + 500, )
 	--[[
+	GetNearbyHeroes from API: 
 	{ hUnit, ... } GetNearbyHeroes( nRadius, bEnemies, nMode)
 	Returns a table of heroes, sorted closest-to-furthest, that are in the specified mode. 
 	If nMode is BOT_MODE_NONE, searches for all heroes. 
 	If bEnemies is true, nMode must be BOT_MODE_NONE. nRadius must be less than 1600.
 	--]]
-	
-    --When crystal maiden has got 2 more allies around and the enemy is low on health, cast frostbite on the enemy
+	--What about the modes? This is probably the universal logic for crystal maiden to cast frostbite 
+    
+	--When crystal maiden has got 2 more allies around and the enemy is low on health, cast frostbite on the enemy
     if ( npcTarget ~= nil and CanCastFrostbiteOnTarget( npcTarget ) ) --~= means approximate, approximately...
 	then
 		--These codes will probably malfunction because they didn't involve calculating the ability's damage
-		--Try to find some ability damage calculations from API later
-		if ( npcTarget:GetActualDamage( nEstimatedDamageToTarget) > npcTarget:GetHealth() + 200)
+		--Try to find some ability damage calculations from API later --SOLVED 
+		--if ( npcTarget:GetActualDamage( nEstimatedDamageToTarget) > npcTarget:GetHealth() + 200)
+		if ( abilityF:GetDamage() > npcTarget:GetHealth() + 200 )
 		then
-            if ( (tableNearbyAllyHeroes >= 2 ) and UnitToUnitDistance( npcTarget, npcBot ) = ( nCastRange + 100) ) 
+            if ( ( tableNearbyAllyHeroes >= 2 ) and UnitToUnitDistance( npcTarget, npcBot ) = ( nCastRange + 100) ) 
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcTarget;
-           end
+            end
 		end
     end
 	
 	if ( npcTarget:IsChanneling() )
     then
-        return BOT_ACTION_DESIRE_HIGH, npcTarget; --cEnemy:GetLocation(); --No need to get location I think?
+        return BOT_ACTION_DESIRE_HIGH, npcTarget; --cEnemy:GetLocation(); --No need to get location I think? --Yeah good idea
     end
 
     return BOT_ACTION_DESIRE_NONE, 0;
@@ -168,78 +175,101 @@ end
 
 ----------------------------------------------------------------------------------------------------
 
+--Need to add more conditions, this is only one and it's far not enough
 function ConsiderFreezingField() 
 
-local npcBot = GetBot();
+	local npcBot = GetBot();
  
 	--If we can't cast freezing field, do nothing at all
-    if ( not abilityFF:IsFullyCastable() ) 
-	then
+	if ( not abilityFF:IsFullyCastable() ) then
         return BOT_ACTION_DESIRE_NONE, 0;
     end 
  
- 
-     local nRadius = abilityBC:GetSpecialValueInt( "freezing_field_aoe" );
-     local tableNearbyEnemyHeroes = npcBot:GetNearbyHeroes( nRadius, true, BOT_MODE_NONE );
+	local locationAoE = npcBot:FindAoELocation( false, true, npcBot:GetLocation(), nRadius, 0, 0 );
+    --[[
+	{ int count, vector targetloc } FindAoELocation( bEnemies, bHeroes, vBaseLocation, nMaxDistanceFromBase, nRadius, fTimeInFuture, nMaxHealth)
+	Gets the optimal location for AoE to hit the maximum number of units described by the parameters. 
+	Returns a table containing the values targetloc that is a vector for the center of the AoE 
+	and count that will be equal to the number of units within the AoE that mach the description. ]]--
+	--So how do we use the table?
+	local nRadius = abilityFF:GetSpecialValueInt( "freezing_field_aoe" );
+	
+	--Counting the number of nearby enemy heroes 
+    local tableNearbyEnemyHeroes = npcBot:GetNearbyHeroes( nRadius, true, BOT_MODE_NONE );
 
-	--if the bot is pushing or defending a tower, and can get 2 or more heroes with the call, use it
-     if (  npcBot:GetActiveMode() == BOT_MODE_PUSH_TOWER_TOP or
-           npcBot:GetActiveMode() == BOT_MODE_PUSH_TOWER_MID or
-           npcBot:GetActiveMode() == BOT_MODE_PUSH_TOWER_BOT or
-           npcBot:GetActiveMode() == BOT_ BOT_MODE_TEAM_ROAM or
-           npcBot:GetActiveMode() == BOT_MODE_ATTACK )
-     then
-           local locationAoE = npcBot:FindAoELocation( false, true, npcBot:GetLocation(), nRadius, 0, 0 );
- 
-           if ( locationAoE.count >= 3 )
-           then
-                return BOT_ACTION_DESIRE_MEDIUM, locationAoE.targetloc;
-		   --if CM can get 3 or more heroes by the FF, then maybe CM should go for damage.
-           end		   
-     end
+	--if the bot is pushing or defending a tower, and can get 3 or more heroes with the ability, go for it
+    if ( npcBot:GetActiveMode() == BOT_MODE_PUSH_TOWER_TOP or
+		npcBot:GetActiveMode() == BOT_MODE_PUSH_TOWER_MID or
+		npcBot:GetActiveMode() == BOT_MODE_PUSH_TOWER_BOT or
+		npcBot:GetActiveMode() == BOT_MODE_TEAM_ROAM or
+		npcBot:GetActiveMode() == BOT_MODE_ATTACK )
+    then
+		if ( tableNearbyEnemyHeroes >= 3 )
+        then
+			return BOT_ACTION_DESIRE_HIGH;
+        end		   
+    end
+	
+	if ( npcBot:GetActiveMode() == BOT_MODE_ROAM or
+		 npcBot:GetActiveMode() == BOT_MODE_TEAM_ROAM )
+	then
+		return BOT_ACTION_DESIRE_MODERATE;
+	end
 
-     return BOT_ACTION_DESIRE_NONE, 0;
+    return BOT_ACTION_DESIRE_NONE;
 end
 
 --------------------------------------------------------------------------------------------------
  
 function ConsiderCrystalNova() 
  
-     local npcBot = GetBot();
-	 local npcTarget = npcBot:GetTarget();
-		
-     if ( not abilityCN:IsFullyCastable() ) then
-           return BOT_ACTION_DESIRE_NONE, 0;
-     end
+    local npcBot = GetBot();
+	local npcTarget = npcBot:GetTarget();
+	
+	--If we can't cast Crystal Nova, do nothing at all
+    if ( not abilityCN:IsFullyCastable() ) then
+		return BOT_ACTION_DESIRE_NONE, 0;
+    end
 	
 	--If we want to cast freezing field then consider freezing field first 
     if ( castFFDesire > 0 )
     then
 		return BOT_ACTION_DESIRE_NONE, 0;
     end
--- I want to do some ambitious code here. High risk.
-local FnCastRange = abilityF:GetCastRange();
-local CNnCastRange = abilityCN:GetCastRange();
-local CNDamage = math.floor ( nEstimatedDamageToTarget );
 
-	 --when CM is roaming or ganking///////. The list modes below is written in official Lina’s bot script, but the codes cannot be found in official website.  Need to check if this works.
-     if (  npcBot:GetActiveMode() == BOT_MODE_ROAM or
-           npcBot:GetActiveMode() == BOT_MODE_TEAM_ROAM or
-           npcBot:GetActiveMode() == BOT_MODE_GANK or
-           npcBot:GetActiveMode() == BOT_MODE_ATTACK )
-     then
-           if ( npcTarget ~= nil and CanCastCNOnTarget( npcTarget) )
-           then
-                if ( UnitToUnitDistance( npcTarget, npcBot ) > FnCastRange and UnitToUnitDistance( npcTarget, npcBot ) <= CNCastRange + 300) 
---when frostbite(range 525) can not reach the enemy but crystal nova(range 700 + effect radius 425) can hit the enemy, then nova the enemy first to decelerate the enemy. I wrote CNCastRange + 300, we add 300 more distance because we have a 425 units effect radius, the reason why I didn’t write exactly 425, is because the bot and target might be moving in a different speed, and to cast Crystal nova there’s a cast animation costs 0.9s. --
-                then
-                     return BOT_ACTION_DESIRE_High, npcTarget;
-                end
+	-- I want to do some ambitious code here. High risk.
+	local FnCastRange = abilityF:GetCastRange();
+	local CNCastRange = abilityCN:GetCastRange();
+	--local CNDamage = math.floor ( nEstimatedDamageToTarget );
+	local CNDamage = abilityCN:GetAbilityDamage();
+
+	--when CM is roaming or ganking
+	--The list modes below is written in official Lina’s bot script, but the codes cannot be found in official website.  Need to check if this works.
+    if ( npcBot:GetActiveMode() == BOT_MODE_ROAM or
+		npcBot:GetActiveMode() == BOT_MODE_TEAM_ROAM or
+        npcBot:GetActiveMode() == BOT_MODE_GANK or
+        npcBot:GetActiveMode() == BOT_MODE_ATTACK )
+    then
+        if ( npcTarget ~= nil and CanCastCNOnTarget( npcTarget) )
+        then
+            if ( UnitToUnitDistance( npcTarget, npcBot ) > FnCastRange and UnitToUnitDistance( npcTarget, npcBot ) <= CNCastRange + 300) 
+			--when frostbite(range 525) can not reach the enemy but crystal nova(range 700 + effect radius 425) can hit the enemy, 
+			--then nova the enemy first to decelerate the enemy. I wrote CNCastRange + 300, we add 300 more distance because we have a 425 units effect radius, 
+			--the reason why I didn’t write exactly 425, is because the bot and target might be moving in a different speed, 
+			--and to cast Crystal nova there’s a cast animation costs 0.9s. 
+			--This is smart mannnnnnn i think crystal maiden moves slowly so we should also take this into consideration?
+            then
+                return BOT_ACTION_DESIRE_HIGH, npcTarget:GetLocation();
+            end
 			
-           end
-     end
-		
-     return BOT_ACTION_DESIRE_NONE, 0;
+        end
+    end
+    return BOT_ACTION_DESIRE_NONE, 0;
 end
+--Should be done for now but we will always need more work on logics 
 
 ----------------------------------------------------------------------------------------------------
+
+function AbilityLevelUpThink ()
+  --this should be the ability level up part, who knows? 
+end

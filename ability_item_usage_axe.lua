@@ -12,37 +12,40 @@ castCBDesire = 0;
  
 function AbilityUsageThink()
  
-     local npcBot = GetBot();
+    local npcBot = GetBot();
 
-     if ( npcBot:IsUsingAbility() ) then return end;
-     abilityBC = npcBot:GetAbilityByName( "axe_berserkers_call" ); 
-	 -- The Original name is Berserker’s Call, do we need to put in the ‘ ?
-     abilityBH = npcBot:GetAbilityByName( "axe_battle_hunger" );
-     abilityCB = npcBot:GetAbilityByName( "axe_culling_blade" );
+    if ( npcBot:IsUsingAbility() ) 
+	then 
+		return 
+	end;
+    abilityBC = npcBot:GetAbilityByName( "axe_berserkers_call" ); 
+	-- The Original name is Berserker’s Call, do we need to put in the ‘ ?
+    abilityBH = npcBot:GetAbilityByName( "axe_battle_hunger" );
+    abilityCB = npcBot:GetAbilityByName( "axe_culling_blade" );
     
 
-     castBCDesire = ConsiderBerserkersCall(); ---- I take BC as an aoe skill
-     castBHDesire, castBHTarget = ConsiderBattleHunger();
-     castCBDesire, castCBTarget = ConsiderCullingBlade();
+    castBCDesire = ConsiderBerserkersCall(); ---- I take BC as an aoe skill
+    castBHDesire, castBHTarget = ConsiderBattleHunger();
+    castCBDesire, castCBTarget = ConsiderCullingBlade();
  
-     if ( castCBDesire > castBCDesire and castCBDesire > castBHDesire )
-     then
-           npcBot:Action_UseAbilityOnEntity( abilityCB, castCBTarget );
-           return;
-     end
+    if ( castCBDesire > castBCDesire and castCBDesire > castBHDesire )
+    then
+		npcBot:Action_UseAbilityOnEntity( abilityCB, castCBTarget );
+        return;
+    end
  
-     if ( castBCDesire > 0 )
-     then
-           npcBot:Action_UseAbility( abilityBC ); ----‘target’ might be wrong
-           return;
-     end
+    if ( castBCDesire > 0 )
+    then
+        npcBot:Action_UseAbility( abilityBC ); ----‘target’ might be wrong
+        return;
+    end
  
-     if ( castBHDesire > 0 )
-     then
-           npcBot:Action_UseAbilityOnEntity( abilityBH, castBHTarcget );
-           return;
-     end
- 
+    if ( castBHDesire > 0 )
+    then
+		npcBot:Action_UseAbilityOnEntity( abilityBH, castBHTarcget );
+        return;
+    end
+
 end
  
 ----------------------------------------------------------------------------------------------------
@@ -226,4 +229,3 @@ local BHDamage = math.floor ( nEstimatedDamageToTarget );
 		
      return BOT_ACTION_DESIRE_NONE, 0;
 end
-

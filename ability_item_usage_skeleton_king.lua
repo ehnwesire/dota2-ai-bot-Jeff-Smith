@@ -77,7 +77,7 @@ function AbilityUsageThink()
 	end
 	
 	--Considering to cast mortal strike with high desires because it might be a waste of mana...?
-	if ( castMSDesire > 0.6 )
+	if ( castMSDesire > 0.4 )
 	then
 		npcBot:Action_UseAbility( abilityMS );
 		return; 
@@ -188,6 +188,7 @@ function ConsiderHellfireBlast()
 			end
 		end
 	end
+end
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -209,4 +210,41 @@ function ConsiderHellfireBlast()
 -- Anyways try to work hard...
 
 --------------------------------------------------------------------------------------------------------------------
+
+function ConsiderMortalStrike()
+
+	local npcBot = GetBot();
+	local botHasMana = npcBot:GetMana() / npcBot:GetMaxMana () > 0.8; 
+	
+	--When skeleton king is pushing or doing rosh and there is no enemy hero around, cast mortal strike to push
+	--[[
+	{ hUnit, ... } GetNearbyHeroes( nRadius, bEnemies, nMode)
+	Returns a table of heroes, sorted closest-to-furthest, that are in the specified mode. 
+	If nMode is BOT_MODE_NONE, searches for all heroes. If bEnemies is true, nMode must be BOT_MODE_NONE. 
+	nRadius must be less than 1600
+	--]]
+	if ( npcBot:GetActiveMode() == BOT_MODE_PUSH_TOWER_BOT or
+		npcBot:GetActiveMode() == BOT_MODE_PUSH_TOWER_MID or
+		npcBot:GetActiveMode() == BOT_MODE_PUSH_TOWER_TOP or
+		npcBot:GetActiveMode() == BOT_MODE_ROSHAN )
+	then 
+		local tableNearbyEnemyHeroes = npcBot:GetNearbyHeroes( 1200 , true, BOT_MODE_NONE );
+		for _,npcEnemy in pairs( tableNearbyEnemyHeroes )
+		do
+			if ( not npcEnemy:CanBeSeen() ) 
+			then
+				return BOT_ACTION_DESIRE_HIGH;
+			end
+		end
+	end
+	
+	--When the bot is defending an ally and has enough mana cast mortal strike 
+	if ( npcBot:GetActiveMode() == BOT_MODE_DEFEND_ALLY )
+	then
+		if ( botHasMana )
+		then 
+			return BOT_ACTION_DESIRE_HIGH;
+		end
+	end
+	
 end

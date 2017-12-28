@@ -6,16 +6,59 @@
 -- Smith Jerry Email: j1059244837@icloud.com
 --------------------------------------------------------------------------------------------------------------------
 
-castMCDesire = 0;
-castASDesire = 0;
-castBTDesire = 0;
+--[[
+	Some reference:  
+	
+	Desire values for taking an action 
+	BOT_ACTION_DESIRE_NONE 
+	BOT_ACTION_DESIRE_VERYLOW 
+	BOT_ACTION_DESIRE_LOW 
+	BOT_ACTION_DESIRE_MODERATE 
+	BOT_ACTION_DESIRE_HIGH 
+	BOT_ACTION_DESIRE_VERYHIGH 
+	BOT_ACTION_DESIRE_ABSOLUTE 
+	
+	Team or bot modes that should be active while taken
+	BOT_MODE_NONE
+	BOT_MODE_LANING
+	BOT_MODE_ATTACK
+	BOT_MODE_ROAM
+	BOT_MODE_RETREAT
+	BOT_MODE_SECRET_SHOP
+	BOT_MODE_SIDE_SHOP
+	BOT_MODE_PUSH_TOWER_TOP
+	BOT_MODE_PUSH_TOWER_MID
+	BOT_MODE_PUSH_TOWER_BOT
+	BOT_MODE_DEFEND_TOWER_TOP
+	BOT_MODE_DEFEND_TOWER_MID
+	BOT_MODE_DEFEND_TOWER_BOT
+	BOT_MODE_ASSEMBLE
+	BOT_MODE_TEAM_ROAM
+	BOT_MODE_FARM
+	BOT_MODE_DEFEND_ALLY
+	BOT_MODE_EVASIVE_MANEUVERS
+	BOT_MODE_ROSHAN
+	BOT_MODE_ITEM
+	BOT_MODE_WARD
+]]--
+
+--------------------------------------------------------------------------------------------------------------------
+
+local castMCDesire = 0;
+local castASDesire = 0;
+local castBTDesire = 0;
  
 function AbilityUsageThink()
  
     local npcBot = GetBot();
 
-    if ( npcBot:IsUsingAbility() ) then return end;
+	--If the bot is channeling or castng an ability, do nothing at all 
+    if ( npcBot:IsUsingAbility() or npcBot:IsChanneling() ) 
+	then 
+		return 
+	end;
 
+	--Getting the handles to abadoon's three abilities 
     abilityMC = npcBot:GetAbilityByName( "abaddon_mist_coil" ); 
     abilityAS = npcBot:GetAbilityByName( "abaddon_aphotic_shield" );
     abilityBT = npcBot:GetAbilityByName( "abaddon_borrowed_time" );
@@ -24,15 +67,18 @@ function AbilityUsageThink()
     castASDesire, castASTarget = ConsiderAphoticShield();
     castBTDesire= ConsiderBorrowedTime(); 
  
+	--Considering to cast aphotic shield with a higher priority because it saves life
 	if ( castASDesire > castBTDesire and castASDesire > castMCDesire )
     then
 		npcBot:Action_UseAbilityOnEntity( abilityAS, castASTarget );
         return;
     end
  
-    if ( castBTDesire > 0.6 )
+	--Triggering borrowed time when Abaddon is in danger or needs to do so
+	--OK, how about we take the getEstimatedDamage into consideration here? 
+    if ( castBTDesire > 0.5 )
     then
-        npcBot:Action_UseAbility( abilityBT ); -- actively trigger the ultimate
+        npcBot:Action_UseAbility( abilityBT ); 
         return;
     end
  
@@ -56,107 +102,147 @@ end
 
 -- The Borrowed Time is a skill casts on abaddon himself.
 
+function CanCastSpellOnTarget ( npcTarget )
+	return npcTarget:CanBeSeen() and not npcTarget:IsMagicImmune() and not npcTarget:IsInvulnerable();
+end
+
 ----------------------------------------------------------------------------------------------------
  
-function ConsiderAphoticShield() -- This skill gives ally hero a sheild and also put a strong dispell, which dispell almost every debuff.
- 
-     local npcBot = GetBot();
-     if ( not abilityAS:IsFullyCastable() )
-     then
-           return BOT_ACTION_DESIRE_NONE, 0;
-     end;
- 
-     local ASCastRange = abilityAS:GetCastRange()
-     local npcTarget = npcBot:GetTarget()
-     if ( npcTarget ~= nil and CanCastAphoticShieldOnTarget( npcTarget ) )
-     then
-           if ( npcTarget:GetHealth() <= 400 and UnitToUnitDistance( npcTarget, npcBot ) <= ( ASCastRange ) )
-           then
-                return BOT_ACTION_DESIRE_VERYHIGH, npcTarget;
-				--We want Abaddon to save his allies by casting AS in them.
-           end
-     end
+-- This skill gives ally hero a sheild and also put a strong dispell, which dispell almost every debuff.
+function ConsiderAphoticShield()
 
-     local tableHelplessAllies = npcBot:GetNearbyHeroes( nRadius + 200, false, BOT_MODE_NONE );
-     for _,npcAlly in pairs( tableHelplessAllies ) --the line's code is hard to understand, in pairs
-     do
-          if ( npcAlly:IsBlind() or npcAlly:IsDisarmed() or npcAlly:IsHexed() and npcAlly:IsMuted() and npcAlly:IsRooted() and npcAlly:IsSilenced()and npcAlly:IsStunned() ) 
-		  --ATTENTION!  This logic is amazing!but should we connect them w/ 'and' or 'or'? And more, 
-		  --check this : IsSpeciallyDeniable() (Returns whether the unit is deniable by allies due to a debuff.) 
-		  --I want to use this code! Where should we put it? Leave enemy no chance for kill!
-          then
-               return BOT_ACTION_DESIRE_HIGH, npcAlly;
-          end
+    local npcBot = GetBot();
+	local npcTarget = npcBot:GetTarget();
+	local ASCastRange = abilityAS:GetCastRange()
+	
+	--If we can't cast Aphotic Shield, do nothing at all
+    if ( not abilityAS:IsFullyCastable() )
+    then
+        return BOT_ACTION_DESIRE_NONE, 0;
+    end
+
+	--We want Abaddon to save his allies by casting AS in them.
+	--[[ { hUnit, ... } GetNearbyHeroes( nRadius, bEnemies, nMode)
+	Returns a table of heroes, sorted closest-to-furthest, that are in the specified mode. 
+	If nMode is BOT_MODE_NONE, searches for all heroes. 
+	If bEnemies is true, nMode must be BOT_MODE_NONE. nRadius must be less than 1600.
+	
+	hUnit GetTeamMember( nPlayerNumberOnTeam )
+	Returns a handle to the Nth player on the team.
+	--]]
+	--ABILITY_TARGET_TEAM_FRIENDLY guess this should be used
+	
+	--[[ 
+	Aphotic shield's consideration: 
+	Teammate is debuffed, low-health or needs help ---> 
+	Distance < CastRange ---> 
+	UseAbility 
+	But how should we get uhhhh the four team members included? 
+	--]]
+    if ( npcTarget ~= nil and CanCastSpellOnTarget ( npcTarget ) )
+    then
+        if ( npcTarget:GetHealth() <= 400 and UnitToUnitDistance( npcTarget, npcBot ) <= ( ASCastRange ) )
+        then
+            return BOT_ACTION_DESIRE_VERYHIGH, npcTarget;
+        end
+    end
+
+	--When allies in cast range are debuffed seriosuly or have 30% or lower health, cast aphotic shield 
+    local tableHelplessAllies = npcBot:GetNearbyHeroes( ASCastRange + 200, false, BOT_MODE_NONE );
+    for _,npcAlly in pairs( tableHelplessAllies ) --the line's code is hard to understand, in pairs
+	--this should work to make use of every unit in the array 
+    do
+		local allyLowHealth = npcAlly:GetHealth() / npcAlly:GetMaxHealth() < 0.3; 
+        
+		if ( npcAlly:IsBlind() or npcAlly:IsDisarmed() 
+		or npcAlly:IsHexed() or npcAlly:IsMuted() 
+		or npcAlly:IsRooted() or npcAlly:IsSilenced() 
+		or npcAlly:IsStunned() or allyLowHealth ) 
+		--ATTENTION!  This logic is amazing!but should we connect them w/ 'and' or 'or'? And more, 
+		--check this : IsSpeciallyDeniable() (Returns whether the unit is deniable by allies due to a debuff.) 
+		--I want to use this code! Where should we put it? Leave enemy no chance for kill!
+		--OMG That's a bad finding I think we should add it in ability_item_usage_general!
+        then
+			return BOT_ACTION_DESIRE_VERYHIGH, npcAlly;
+        end
+	end
 end
 
 ----------------------------------------------------------------------------------------------------
 
-function ConsiderMistCoil()  -- this skill use health to cause damage/heal to enemy/ally
+-- this skill uses Abaddon's health for outputs of damage/heal to enemy/ally
+function ConsiderMistCoil() 
 
-
-local npcBot = GetBot();
-local npcTarget = npcBot:GetTarget()
-local MCCastRange = abilityMC:GetCastRange()
-
-     if ( npcBot:GetHealth() <= 150 and UnitToUnitDistance( npcTarget, npcBot ) <= ( nCastRange ) ) --if abaddon's health is low and enemy is insight, deny himself.
-           then
-                return BOT_ACTION_DESIRE_VERYHIGH, npcTarget;
-     end;
+	local npcBot = GetBot();
+	local npcTarget = npcBot:GetTarget();
+	local MCCastRange = abilityMC:GetCastRange();
+	local MCDamage = abilityMC:GetAbilityDamage();
 	
-     local tableLowHealthAllies = npcBot:GetNearbyHeroes( nRadius, false, BOT_MODE_NONE ); -- Use skill to heal Ally when own health is in a good shape.
-     for _,npcAlly in pairs( tableLowHealthAllies ) 
-     do 
-	     if ( npcAlly:GetHealth() <= 300 and ( npcBot:GetHealth() / npcBot:GetMaxHealth() > 0.8 ) )
-         then 
-		        return BOT_ACTION_DESIRE_MEDIUM, npcAlly;
-		 end
-	 end
-      if ( castASDesire > 0 )  --usually using AS is the priority
+	--If we want to cast aphotic shield more, do nothing at all
+	if ( castASDesire > 0 ) 
      then
            return BOT_ACTION_DESIRE_NONE, 0;
      end;
 
-     local nRadius = abilityMC:GetCastRange()
-	 --if we are roaming to gank someone, and 
-     if (  npcBot:GetActiveMode() == BOT_MODE_ROAM or
-           npcBot:GetActiveMode() == BOT_MODE_TEAM_ROAM or
-           npcBot:GetActiveMode() == BOT_MODE_GANK )
-     then
-           if ( npcTarget ~= nil )
-           then
-                if ( CanCastBattleHungerOnTarget( npcTarget ) )
-                then
-                     return BOT_ACTION_DESIRE_LOW, npcTarget;
-                end
-				
-				if ( npcTarget:GetHealth < BHDamage + 100 ) 
-				then
-					return BOT_ACTION_DESIRE_HIGH, npcTarget; 
-				end
-				
-				
-           end
-     end
+    --if abaddon's health is low and enemy is insight, deny himself by casting Mist Coil on enemy 
+	if ( npcBot:GetHealth() <= 150 and UnitToUnitDistance( npcTarget, npcBot ) <= ( MCCastRange ) ) 
+    then
+        return BOT_ACTION_DESIRE_VERYHIGH, npcTarget;
+    end
+	
+	--Use skill to heal wounded allies when Abaddon's health is in a good shape. 
+	--Also makes sure of keeping abaddon's mana good (?)
+    local tableLowHealthAllies = npcBot:GetNearbyHeroes( nRadius, false, BOT_MODE_NONE );
+    for _,npcAlly in pairs( tableLowHealthAllies ) 
+    do 
+	    if ( npcAlly:GetHealth() <= 300 and npcBot:GetHealth() / npcBot:GetMaxHealth() > 0.8 
+			and npcBot:GetMana() / npcBot:GetMaxMana() > 0.65 )
+        then 
+		        return BOT_ACTION_DESIRE_MEDIUM, npcAlly;
+		end
+	end
+	
+    local nRadius = abilityMC:GetCastRange()
+	--if we are roaming to gank an enemy, cast Mist Coil on them to deal damage 
+	--Also making sure of that abadoon has enough mana 
+    if (  npcBot:GetActiveMode() == BOT_MODE_ROAM or
+		npcBot:GetActiveMode() == BOT_MODE_TEAM_ROAM or
+        npcBot:GetActiveMode() == BOT_MODE_GANK )
+    then
+		local botHasMana = npcBot:GetMana() / npcBot:GetMaxMana() > 0.65;
+		if ( npcTarget ~= nil and CanCastSpellOnTarget( npcTarget ) and botHasMana )
+        then
+                return BOT_ACTION_DESIRE_MEDIUM, npcTarget;
+		end
+	end
+	
+	--If Mist Coil can kill or badly would an enemy, go for it
+	if ( npcTarget:GetHealth < MCDamage + 100 ) 
+	then
+		return BOT_ACTION_DESIRE_HIGH, npcTarget; 
+	end
 		
-		--if the enemy's health is more than 60%, and our mana is more than 60% & Health more than 80%, cast it on the enemy as
-		--an inflict of damage
-		--condition under farming mode, laning mode, defend ally, defending towers 
-	 if (  npcBot:GetActiveMode() == BOT_MODE_FARM or
-           npcBot:GetActiveMode() == BOT_MODE_LANING or
-           npcBot:GetActiveMode() == BOT_MODE_DEFEND_ALLY or
-		   npcBot:GetActiveMode() == BOT_MODE_DEFEND_TOWER_BOT or
-           npcBot:GetActiveMode() == BOT_MODE_DEFEND_TOWER_MID or
-           npcBot:GetActiveMode() == BOT_MODE_DEFEND_TOWER_TOP )
-		 if ( npcTarget:GetHealth() / npcTarget:GetMaxHealth() > 0.6 )
-		 then
-			if ( ( npcBot:GetHealth() / npcBot:GetMaxHealth() > 0.8) and ( npcBot:GetMana() / npcBot:GetMaxMana() > 0.6 ) )
+	--if the enemy's health is more than 60%, and our mana is more than 60% & Health more than 80%, 
+	--cast it on the enemy as an inflict of damage
+	--condition under farming mode, laning mode, defend ally, defending towers 
+	--Like trading health, I like it. 
+	if (  npcBot:GetActiveMode() == BOT_MODE_FARM or
+        npcBot:GetActiveMode() == BOT_MODE_LANING or
+        npcBot:GetActiveMode() == BOT_MODE_DEFEND_ALLY or
+		npcBot:GetActiveMode() == BOT_MODE_DEFEND_TOWER_BOT or
+        npcBot:GetActiveMode() == BOT_MODE_DEFEND_TOWER_MID or
+        npcBot:GetActiveMode() == BOT_MODE_DEFEND_TOWER_TOP )
+	then
+		if ( npcTarget:GetHealth() / npcTarget:GetMaxHealth() > 0.6 )
+		then
+			if ( npcBot:GetHealth() / npcBot:GetMaxHealth() > 0.8 and npcBot:GetMana() / npcBot:GetMaxMana() > 0.6 )
 			then
 				return BOT_ACTION_DESIRE_MEDIUM, npcTarget; 
 			end
 		end
-	 end	
+	end	
 		
-     return BOT_ACTION_DESIRE_NONE, 0;
+    return BOT_ACTION_DESIRE_NONE, 0;
 end
 
 ----------------------------------------------------------------------------------------------------
