@@ -1,27 +1,45 @@
 ----------------------------------------------------------------------------
-require( GetScriptDirectory().."/utility" ) 
 
 local ItemsToBuy = 
 { 
+	"item_tango"
 	"item_stout_shield"
-       "item_tango"
-       "item_tango"
-       "item_boots"
-       "item_tranquil_boots"
-       "item_blink"
-       "item_blade_mail"
-       "item_crimson_guard"
-       "item_shivas_guard"
-       "item_heart"
+    "item_tango"
+    "item_tango"
+    "item_boots"
+    "item_tranquil_boots"
+    "item_blink"
+    "item_blade_mail"
+    "item_crimson_guard"
+    "item_shivas_guard"
+    "item_heart"
 }
 
-utility.checkItemBuild(ItemsToBuy)
-
 function ItemPurchaseThink()
-	utility.ItemPurchase(ItemsToBuy)
+
+    local npcBot = GetBot();
+
+    if ( #ItemsToBuy == 0 )
+    then
+        npcBot:SetNextItemPurchaseValue( 0 );
+        return;
+    end
+
+    local sNextItem = ItemsToBuy[1];
+
+    npcBot:SetNextItemPurchaseValue( GetItemCost( sNextItem ) );   
+
+    if ( npcBot:GetGold() >= GetItemCost( sNextItem ) )         
+    then
+        npcBot:Action_PurchaseItem( sNextItem ); 
+        table.remove( ItemsToBuy, 1 );
+    end
+
 end
+
 ----------------------------------------------------------------------------
-  function SellExtraItem() --let’s sell the redundant stuffs
+--[[
+function SellExtraItem() --let’s sell the redundant stuffs
       if ( GameTime () > 10*60 )
       then 
          SellSpecifiedItem ( "item_stout_shield" )
@@ -64,4 +82,4 @@ end
        end
 end
  ----------------------------------------------------------------------------
-
+]]--

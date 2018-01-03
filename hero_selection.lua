@@ -31,7 +31,22 @@ if ( GetTeam() == TEAM_RADIANT )
 		SelectHero(9,team2[3]);
 		SelectHero(10,team2[4]);
 		SelectHero(11,team2[5]);
-	end
+end
+
+end
+
+function UpdateLaneAssignments()
+
+local npcBot = GetBot();
+local lanes = {
+	[1] = LANE_BOT,
+	[2] = LANE_MID,
+	[3] = LANE_TOP,
+	[4] = LANE_TOP,
+	[5] = LANE_BOT,
+}
+
+	return lanes;
 end
 
 --the first hero selection code that we wrote for selecting teams randomly

@@ -1,5 +1,4 @@
-i----------------------------------------------------------------------------
-require( GetScriptDirectory().."/utility" ) 
+----------------------------------------------------------------------------
 
 local ItemsToBuy = 
 { 
@@ -18,10 +17,26 @@ local ItemsToBuy =
     "item_moon_shard" -- consume it
 }
 
-utility.checkItemBuild(ItemsToBuy)
-
 function ItemPurchaseThink()
-	utility.ItemPurchase(ItemsToBuy)
+
+local npcBot = GetBot();
+
+    if ( #ItemsToBuy == 0 )
+    then
+        npcBot:SetNextItemPurchaseValue( 0 );
+        return;
+    end
+
+    local sNextItem = ItemsToBuy[1];
+
+    npcBot:SetNextItemPurchaseValue( GetItemCost( sNextItem ) );   
+
+    if ( npcBot:GetGold() >= GetItemCost( sNextItem ) )         
+    then
+        npcBot:ActionImmediate_PurchaseItem ( sNextItem );
+        table.remove( ItemsToBuy, 1 );
+    end
+
 end
 
 ----------------------------------------------------------------------------

@@ -11,8 +11,6 @@
 --	Author: adamqqq		Email:adamqqq@163.com
 ----------------------------------------------------------------------------------------------------
 
-require( GetScriptDirectory().."/utility" ) 
-
 local ItemsToBuy = 
 { 
 	"item_tango",
@@ -44,8 +42,24 @@ local ItemsToBuy =
 	"item_mystic_staff",			--玲珑心
 }
 
-utility.checkItemBuild(ItemsToBuy)
-
 function ItemPurchaseThink()
-	utility.ItemPurchase(ItemsToBuy)
+
+local npcBot = GetBot();
+
+    if ( #ItemsToBuy == 0 )
+    then
+        npcBot:SetNextItemPurchaseValue( 0 );
+        return;
+    end
+
+    local sNextItem = ItemsToBuy[1];
+
+    npcBot:SetNextItemPurchaseValue( GetItemCost( sNextItem ) );   
+
+    if ( npcBot:GetGold() >= GetItemCost( sNextItem ) )         
+    then
+        npcBot:ActionImmediate_PurchaseItem ( sNextItem );
+        table.remove( ItemsToBuy, 1 );
+    end
+
 end
