@@ -2,17 +2,28 @@
 
 local ItemsToBuy = 
 { 
-	"item_tango"
-	"item_stout_shield"
-    "item_tango"
-    "item_tango"
-    "item_boots"
-    "item_tranquil_boots"
-    "item_blink"
-    "item_blade_mail"
-    "item_crimson_guard"
-    "item_shivas_guard"
-    "item_heart"
+	"item_stout_shield", --Do not sell it 
+    "item_tango",
+    "item_tango",
+	"item_boots",
+    "item_ring_of_regen",
+    "item_wind_lace", --not sure if this code’s right.  We should get tranquil boots
+    "item_blink",
+    "item_broadsword",
+    "item_chainmail",
+    "item_robe", -- blade-mail 
+    "item_vitality_booster",
+    "item_ring_of_health", -- Vanguard
+    "item_chainmail",
+    "item_branches",
+    "item_recipe_buckler", -- get buckler
+    "item_recipe_crimson_guard", --use buckler and vanguard to make crimson guard
+    "item_mystic_staff",
+    "item_platemail",
+    "item_recipe_shivas_guard", -- Shivas guards done.
+    "item_reaver",
+    "item_vitality_booster",
+    "item_vitality_booster", -- The Heart!
 }
 
 function ItemPurchaseThink()
@@ -31,7 +42,7 @@ function ItemPurchaseThink()
 
     if ( npcBot:GetGold() >= GetItemCost( sNextItem ) )         
     then
-        npcBot:Action_PurchaseItem( sNextItem ); 
+        npcBot:ActionImmediate_PurchaseItem ( sNextItem );
         table.remove( ItemsToBuy, 1 );
     end
 

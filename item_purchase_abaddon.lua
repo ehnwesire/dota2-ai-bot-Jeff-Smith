@@ -6,21 +6,33 @@
 -- Smith Jerry Email: j1059244837@icloud.com
 --------------------------------------------------------------------------------------------------------------------
 
-require( GetScriptDirectory().."/utility" ) 
-
 local ItemsToBuy = 
 { 
-      "item_tango"
-      "item_stout_shield"
-      "item_boots"
-      "item_phase_boots"
-      "item_hand_of_midas"
-      "item_ radiance"
-      "item_ octarine_core"
-      "item_ shivas_guard"
-      "item_solar_crest"
-      "item_ultimate_specter"
-      "item_moon_shard" --how to make bot consume it?
+    "item_tango",
+    "item_stout_shield",
+    "item_boots",
+    "item_blades_of_attack",
+	"item_blades_of_attack", --"item_phase_boots"
+    "item_gloves",
+	"item_recipe_hand_of_midas", --"item_hand_of_midas"
+    "item_relic",
+	"item_recipe_radiance", --"item_radiance"
+	"item_vitality_booster", 
+	"item_point_booster",
+	"item_energy_booster", --"item_octarine_core"
+    "item_mystic_staff",
+	"item_platemail",
+	"item_recipe_shivas_guard", --"item_shivas_guard",
+    "item_chainmail",
+    "item_sobi_mask",
+    "item_blight_stone", --"item_medallion_of_courage",
+    "item_talisman_of_evasion", --"item_solar_crest",
+    "item_ogre_axe",
+    "item_point_booster",
+    "item_blade_of_alacrity",
+    "item_staff_of_wizardry", --"item_ultimate_scepter"
+    "item_hyperstone",
+    "item_hyperstone", --"item_moon shard" consumable
 }
 
 function ItemPurchaseThink()
@@ -44,20 +56,3 @@ local npcBot = GetBot();
     end
 
 end
-
---------------------------------------------------------------------------------------------------------------------
-
-function SellExtraItem() --let’s sell the redundant stuffs
-      if ( GameTime () > 15*60 )
-      then 
-         SellSpecifiedItem ( "item_stout_shield" )
-         SellSpecifiedItem ( "item_tango" )
-      end
-
-      elseif (PurchaseResult==PURCHASE_ITEM_OUT_OF_STOCK
-      then
-         SellSpecifiedItem ( "item_stout_shield" )
-         SellSpecifiedItem ( "item_tango" )
-         SellSpecifiedItem ( "item_hand_of_midas" )
-      end
-  end

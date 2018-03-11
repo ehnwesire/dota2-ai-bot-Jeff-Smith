@@ -1,15 +1,10 @@
-----------------------------------------------------------------------------------------------------
--- The script was taken from adamqqq's Ranked Matchmaking AI Bot
--- The KingleeBotSmiths certify that they didn't create this work
--- item_purchase_lina.lua 
--- Used by KingleeBotSmiths
+--------------------------------------------------------------------------------------------------------------------
+-- item_purchase_abaddon.lua
+-- Author: KingleeBotSmiths 
 -- Smith Trey Email: benjtrey@163.com
 -- Smith Eric Email: looking4eric@outlook.com 
 -- Smith Jerry Email: j1059244837@icloud.com
-----------------------------------------------------------------------------------------------------
---	Ranked Matchmaking AI v1.0a
---	Author: adamqqq		Email:adamqqq@163.com
-----------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
 
 local ItemsToBuy = 
 { 
@@ -21,25 +16,25 @@ local ItemsToBuy =
 	"item_bottle",
 	"item_boots",
 	"item_magic_stick",
-	"item_enchanted_mango",			--大魔棒7.07
-	"item_energy_booster",			--秘法鞋
+	"item_enchanted_mango",
+	"item_energy_booster",			
 	"item_void_stone",
 	"item_energy_booster",
-	"item_recipe_aether_lens",		--以太之镜7.06
+	"item_recipe_aether_lens",
 	"item_staff_of_wizardry",
 	"item_void_stone",
-	"item_recipe_cyclone",				--风杖
+	"item_recipe_cyclone",			
 	"item_point_booster",
 	"item_staff_of_wizardry",
 	"item_ogre_axe",
-	"item_blade_of_alacrity",		--蓝杖
+	"item_blade_of_alacrity",		
 	"item_platemail",
 	"item_mystic_staff",
-	"item_recipe_shivas_guard",		--希瓦
+	"item_recipe_shivas_guard",	
 	"item_point_booster",
 	"item_vitality_booster",
 	"item_energy_booster",
-	"item_mystic_staff",			--玲珑心
+	"item_mystic_staff",			
 }
 
 function ItemPurchaseThink()

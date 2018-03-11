@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------------------------
 -- ability_item_usage_lina.lua
--- IMPORTANT -- THIS CODE IS COPIED FROM VALVE'S EXAMPLE BOT SCRIPT --
+-- EXAMPLE SCRIPT DE VALVE 
 -- Author: KingleeBotSmiths 
 -- Smith Trey Email: benjtrey@163.com
 -- Smith Eric Email: looking4eric@outlook.com 
@@ -49,7 +49,6 @@ end
 ----------------------------------------------------------------------------------------------------
 
 function CanCastLightStrikeArrayOnTarget()
- )
 	return npcTarget:CanBeSeen() and not npcTarget:IsMagicImmune() and not npcTarget:IsInvulnerable();
 end
 
@@ -59,7 +58,7 @@ function CanCastDragonSlaveOnTarget( npcTarget )
 end
 
 function CanCastLagunaBladeOnTarget( npcTarget )
-return npcTarget:CanBeSeen() and npcTarget:IsHero() and ( GetBot():HasScepter() or not npcTarget:IsMagicImmune() ) and not npcTarget:IsInvulnerable();
+	return npcTarget:CanBeSeen() and npcTarget:IsHero() and ( GetBot():HasScepter() or not npcTarget:IsMagicImmune() ) and not npcTarget:IsInvulnerable();
 end
 
 ----------------------------------------------------------------------------------------------------
@@ -67,6 +66,7 @@ end
 function ConsiderLightStrikeArray()
 
 	local npcBot = GetBot();
+	local npcTarget = npcBot:GetTarget();
 
 	-- Make sure it's castable
 	if ( not abilityLSA:IsFullyCastable() ) 
@@ -156,7 +156,6 @@ function ConsiderLightStrikeArray()
 		 npcBot:GetActiveMode() == BOT_MODE_GANK or
 		 npcBot:GetActiveMode() == BOT_MODE_DEFEND_ALLY ) 
 	then
-		local npcTarget = npcBot:GetTarget();
 
 		if ( npcTarget ~= nil ) 
 		then
@@ -175,6 +174,7 @@ end
 function ConsiderDragonSlave()
 
 	local npcBot = GetBot();
+	local npcTarget = npcBot:GetTarget();
 
 	-- Make sure it's castable
 	if ( not abilityDS:IsFullyCastable() ) then 
@@ -226,8 +226,6 @@ function ConsiderDragonSlave()
 		 npcBot:GetActiveMode() == BOT_MODE_GANK or
 		 npcBot:GetActiveMode() == BOT_MODE_DEFEND_ALLY ) 
 	then
-		local npcTarget = npcBot:GetTarget();
-
 		if ( npcTarget ~= nil ) 
 		then
 			if ( CanCastDragonSlaveOnTarget( npcTarget ) )
@@ -262,7 +260,7 @@ function ConsiderLagunaBlade()
 	local npcTarget = npcBot:GetTarget();
 	if ( npcTarget ~= nil and CanCastLagunaBladeOnTarget( npcTarget ) )
 	then
-		if ( npcTarget:GetActualDamage( nDamage, eDamageType ) > npcTarget:GetHealth() and UnitToUnitDistance( npcTarget, npcBot ) < ( nCastRange + 200 ) )
+		if ( abilityLB:GetAbilityDamage() > npcTarget:GetHealth() and UnitToUnitDistance( npcTarget, npcBot ) < ( nCastRange + 200 ) )
 		then
 			return BOT_ACTION_DESIRE_HIGH, npcTarget;
 		end

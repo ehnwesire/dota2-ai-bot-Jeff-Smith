@@ -70,7 +70,7 @@ function AbilityUsageThink()
 	castMSDesire = ConsiderMortalStrike();
 	
 	--If we have some desire for casting hellfire blast, cast it (on the target)
-	if ( castHBDesire > 0 )
+	if ( castHBDesire > 0.1 )
 	then 
 		npcBot:Action_UseAbilityOnEntity( abilityHB, castHBTarget );
 		return; 
@@ -129,7 +129,7 @@ function ConsiderHellfireBlast()
 		 npcBot:GetActiveMode() == BOT_MODE_PUSH_TOWER_BOT or
 		 npcBot:GetActiveMode() == BOT_MODE_DEFEND_TOWER_TOP or
 		 npcBot:GetActiveMode() == BOT_MODE_DEFEND_TOWER_MID or
-		 npcBot:GetActiveMode() == BOT_MODE_DEFEND_TOWER_BOT or ) 
+		 npcBot:GetActiveMode() == BOT_MODE_DEFEND_TOWER_BOT ) 
 	then
 		local tableNearbyEnemyHeroes = npcBot:GetNearbyHeroes( nCastRange, true, BOT_MODE_NONE );
 		local npcTarget = npcBot:GetTarget();
@@ -178,7 +178,6 @@ function ConsiderHellfireBlast()
 			local nDamage = abilityHB:GetAbilityDamage(); 
 			if ( npcTarget ~= nil ) 
 			then
-				then
 					return BOT_ACTION_DESIRE_HIGH, npcTarget;
 			end
 		

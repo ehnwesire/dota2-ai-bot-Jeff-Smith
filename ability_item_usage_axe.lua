@@ -14,21 +14,18 @@ function AbilityUsageThink()
  
     local npcBot = GetBot();
 
-    if ( npcBot:IsUsingAbility() ) 
-	then 
-		return 
-	end;
+	-- Check if the ability will stop our ongoing action
+    if ( npcBot:IsUsingAbility() ) then return end;
+	
     abilityBC = npcBot:GetAbilityByName( "axe_berserkers_call" ); 
-	-- The Original name is Berserker’s Call, do we need to put in the ‘ ?
     abilityBH = npcBot:GetAbilityByName( "axe_battle_hunger" );
     abilityCB = npcBot:GetAbilityByName( "axe_culling_blade" );
-    
 
-    castBCDesire = ConsiderBerserkersCall(); ---- I take BC as an aoe skill
+	--Consider using each ability
+    castBCDesire = ConsiderBerserkersCall(); 
     castBHDesire, castBHTarget = ConsiderBattleHunger();
     castCBDesire, castCBTarget = ConsiderCullingBlade();
  
-    if ( castCBDesire > castBCDesire and castCBDesire > castBHDesire )
     then
 		npcBot:Action_UseAbilityOnEntity( abilityCB, castCBTarget );
         return;
@@ -36,7 +33,7 @@ function AbilityUsageThink()
  
     if ( castBCDesire > 0 )
     then
-        npcBot:Action_UseAbility( abilityBC ); ----‘target’ might be wrong
+        npcBot:Action_UseAbility( abilityBC );
         return;
     end
  
@@ -69,36 +66,42 @@ end
  
 function ConsiderCullingBlade()
  
-     local npcBot = GetBot();
-     if ( not abilityCB:IsFullyCastable() )
-     then
-           return BOT_ACTION_DESIRE_NONE, 0;
-     end;
-	 --if we can use berserkerscall we will use that fist (prior)
-     if ( castBCDesire > 0 )
-     then
-           return BOT_ACTION_DESIRE_NONE, 0;
-     end
- 
-     local nCastRange = abilityCB:GetCastRange();
-     local nDamage = abilityCB:GetAbilityDamage(); --+ 100;  --the damage theshold of killing an enemy immediately
-	 local eDamageType = abilityCB:DAMAGE_TYPE_MAGICAL;
+    local npcBot = GetBot();
+	 
+    if ( not abilityCB:IsFullyCastable() )
+    then
+		return BOT_ACTION_DESIRE_NONE, 0;
+    end;
 	
-     local npcTarget = npcBot:GetTarget();
-     if ( npcTarget ~= nil and CanCastCullingBladeOnTarget( npcTarget ) ) --what does ~= mean? 
-     then
-			--get actual damage??? --this line of code is probably wronG.
-           if ( npcTarget:GetActualDamage( nDamage, eDamageType ) > npcTarget:GetHealth() + 100 and UnitToUnitDistance( npcTarget, npcBot ) <= ( nCastRange ) )
+	-- If we can use BerserkersCall, reject CullingBlade for a while
+    if ( castBCDesire > 0 )
+    then
+		return BOT_ACTION_DESIRE_NONE, 0;
+    end
+ 
+    local nCastRange = abilityCB:GetCastRange();
+    local nDamage = abilityCB:GetAbilityDamage(); 
+	
+    local npcTarget = npcBot:GetTarget();
+    if ( npcTarget ~= nil and CanCastCullingBladeOnTarget( npcTarget ) ) --what does ~= mean? 
+    then
+		--get actual damage??? --this line of code is probably wronG.
+        if ( npcTarget:GetActualDamage( nDamage, eDamageType ) > npcTarget:GetHealth() + 100 and UnitToUnitDistance( npcTarget, npcBot ) <= ( nCastRange ) )
            then
-                return BOT_ACTION_DESIRE_ABSOLUTE, npcTarget;
+				print("Jeff Smith is working dawg!");
+                return BOT_ACTION_DESIRE_HIGH, npcTarget;
 				--because culling blade can kill targets immediately thus the deisre should be highest
            end
      end
+	 
+	return BOT_ACTION_DESIRE_NONE, 0; 	
+	
+end
 
 
 ----------------------------------------------------------------------------------------------------
 
-function ConsiderBerserkersCall() -- ‘
+function ConsiderBerserkersCall() 
 
 local npcBot = GetBot();
  
@@ -132,13 +135,13 @@ local npcBot = GetBot();
                 return BOT_ACTION_DESIRE_HIGH, locationAoE.targetloc;
 		   --if we can get 4 or more heroes by the BC, the desire should be HIGH. 
 		   --if the hero counr is 2 instead of 4 (less valuable), return MEDIUM.
-		   else if (locationAoE.count >= 2 ))
+		   else if (locationAoE.count >= 2 )
 		   then
 				return BOT_ACTION_DESIRE_MEDIUM; --locationAoE.targetloc;
            end
 		   
 		   
-     end
+			end
 
 	 -- if the team is targeting on an enemy hero by the current active code, try to get them
      if (  npcBot:GetActiveMode() == BOT_MODE_ROAM or
@@ -152,8 +155,9 @@ local npcBot = GetBot();
            then
                 if ( CanCastBerserkersCallOnTarget( npcTarget ) )
                 then
-					if ( GetUnitToUnitDistance ( npcTarget, npcBot ) =< nRadius ):
-                     return BOT_ACTION_DESIRE_HIGH; -- npcTarget:GetLocation();
+					if ( GetUnitToUnitDistance ( npcTarget, npcBot ) < nRadius )
+					then	
+						return BOT_ACTION_DESIRE_HIGH; -- npcTarget:GetLocation();
 					end
 					--added our own code here: if the target is within BC's area of effect, use it with HIGH desire. 
 				end
@@ -161,6 +165,8 @@ local npcBot = GetBot();
      end
  
      return BOT_ACTION_DESIRE_NONE, 0;
+	 
+	end
 end
  --[[
  float GetUnitToUnitDistance( hUnit1, hUnit2 )
@@ -200,7 +206,7 @@ local BHDamage = math.floor ( nEstimatedDamageToTarget );
                      return BOT_ACTION_DESIRE_LOW, npcTarget;
                 end
 				
-				if ( npcTarget:GetHealth < BHDamage + 100 )
+				if ( npcTarget:GetHealth() < BHDamage + 100 )
 				then
 					return BOT_ACTION_DESIRE_HIGH, npcTarget; 
 				end
@@ -218,6 +224,7 @@ local BHDamage = math.floor ( nEstimatedDamageToTarget );
 		   npcBot:GetActiveMode() == BOT_MODE_DEFEND_TOWER_BOT or
            npcBot:GetActiveMode() == BOT_MODE_DEFEND_TOWER_MID or
            npcBot:GetActiveMode() == BOT_MODE_DEFEND_TOWER_TOP )
+	then
 		 if ( npcTarget:GetHealth() / npcTarget:GetMaxHealth() > 0.6 )
 		 then
 			if ( npcBot:GetMana() / npcBot:GetMaxMana() > 0.8)

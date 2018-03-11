@@ -158,7 +158,7 @@ function ConsiderFrostbite()
 		--if ( npcTarget:GetActualDamage( nEstimatedDamageToTarget) > npcTarget:GetHealth() + 200)
 		if ( abilityF:GetDamage() > npcTarget:GetHealth() + 200 )
 		then
-            if ( ( tableNearbyAllyHeroes >= 2 ) and UnitToUnitDistance( npcTarget, npcBot ) = ( nCastRange + 100) ) 
+            if ( ( tableNearbyAllyHeroes >= 2 ) and UnitToUnitDistance(npcTarget, npcBot)= nCastRange + 100 ) 
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcTarget;
             end

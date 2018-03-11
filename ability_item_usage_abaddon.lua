@@ -217,7 +217,7 @@ function ConsiderMistCoil()
 	end
 	
 	--If Mist Coil can kill or badly would an enemy, go for it
-	if ( npcTarget:GetHealth < MCDamage + 100 ) 
+	if ( npcTarget:GetHealth() < MCDamage + 100 ) 
 	then
 		return BOT_ACTION_DESIRE_HIGH, npcTarget; 
 	end

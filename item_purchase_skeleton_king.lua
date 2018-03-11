@@ -1,20 +1,41 @@
-----------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+-- item_purchase_abaddon.lua
+-- Author: KingleeBotSmiths 
+-- Smith Trey Email: benjtrey@163.com
+-- Smith Eric Email: looking4eric@outlook.com 
+-- Smith Jerry Email: j1059244837@icloud.com
+--------------------------------------------------------------------------------------------------------------------
 
-local ItemsToBuy = 
+local ItemsToBuy = 	
 { 
-	"item_tango"
-    "item_flask"
-	"item_stout_shield"
-    "item_power_treads"
-	"item_desolator"
-    "item_black_king_bar"
-    "item_javelin"
-    "item_monkey_king_bar"
-    "item_maelstrom"
-    "item_basher"
-    "item_mjollnir"
-	"item_abyssal_balde"
-    "item_moon_shard" -- consume it
+	"item_tango",
+    "item_flask",
+    "item_stout_shield",
+    "item_boots",
+    "item_gloves",
+    "item_belt_of_strength", -- power treads!
+    "item_blight_stone", -- problematic!
+    "item_mithril_hammer",
+    "item_mithril_hammer", -- desolator
+    "item_mithril_hammer",
+    "item_ogre_axe",
+    "item_recipe_black_king_bar", --BKB
+    "item_javelin",
+    "item_javelin",
+    "item_hyperstone", -- monkey king bar
+    "item_gloves",
+    "item_mithril_hammer",
+    "item_recipe_maelstrom",
+    "item_javelin",
+    "item_belt_of_strength",
+    "item_recipe_basher",
+    "item_hyperstone",
+    "item_recipe_mjollnir",
+    "item_vitality_booster",
+    "item_ring_of_health",
+    "item_recipe_abyssal_balde",
+    "item_hyperstone",
+    "item_hyperstone", --Moon shard!
 }
 
 function ItemPurchaseThink()
@@ -38,19 +59,3 @@ local npcBot = GetBot();
     end
 
 end
-
-----------------------------------------------------------------------------
-  function SellExtraItem() --let’s sell the redundant stuffs
-      if ( GameTime () > 10*60 )
-      then 
-         SellSpecifiedItem ( "item_stout_shield" )
-         SellSpecifiedItem ( "item_tango" )
-         SellSpecifiedItem ( "item_flask" )
-      end
-
-     --elseif (PurchaseResult==PURCHASE_ITEM_OUT_OF_STOCK
-      then
-         SellSpecifiedItem ( "item_stout_shield" )
-         SellSpecifiedItem ( "item_tango" )
-      --end -- No extra item to sell. 
-  end

@@ -8,7 +8,7 @@
 
 function Think()
 
-team1 = {"npc_dota_hero_skeleton_king", "npc_dota_hero_lina", "npc_dota_hero_axe",
+team1 = {"npc_dota_hero_luna", "npc_dota_hero_lina", "npc_dota_hero_axe",
 "npc_dota_hero_abaddon", "npc_dota_hero_crystal_maiden"};
 team2 = {"npc_dota_hero_sniper", "npc_dota_hero_drow_ranger", "npc_dota_hero_earthshaker",
 "npc_dota_hero_enigma", "npc_dota_hero_sandking"};
@@ -37,14 +37,14 @@ end
 
 function UpdateLaneAssignments()
 
-local npcBot = GetBot();
-local lanes = {
-	[1] = LANE_BOT,
-	[2] = LANE_MID,
-	[3] = LANE_TOP,
-	[4] = LANE_TOP,
-	[5] = LANE_BOT,
-}
+	local npcBot = GetBot();
+	local lanes = {
+		[1] = LANE_BOT,
+		[2] = LANE_MID,
+		[3] = LANE_TOP,
+		[4] = LANE_TOP,
+		[5] = LANE_BOT,
+		}
 
 	return lanes;
 end
