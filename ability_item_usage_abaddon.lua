@@ -55,7 +55,7 @@ function AbilityUsageThink()
 	--If the bot is channeling or castng an ability, do nothing at all 
     if ( npcBot:IsUsingAbility() or npcBot:IsChanneling() ) 
 	then 
-	    print("Jeff Smith is working dawg!ABDstopall")
+	    print("Jeff Smith is working dawg!ABDstopall");
 		return 
 	end;
 
@@ -71,7 +71,7 @@ function AbilityUsageThink()
 	--Considering to cast aphotic shield with a higher priority because it saves life
 	if ( castASDesire > castBTDesire and castASDesire > castMCDesire )
     then
-	    print("Jeff Smith is working dawg!ABDcastAS")
+	    print("Jeff Smith is working dawg!ABDcastAS");
 		npcBot:Action_UseAbilityOnEntity( abilityAS, castASTarget );
         return;
     end
@@ -80,14 +80,14 @@ function AbilityUsageThink()
 	--OK, how about we take the getEstimatedDamage into consideration here? 
     if ( castBTDesire > 0.5 )
     then
-	    print("Jeff Smith is working dawg!ABDsaveurself")
+	    print("Jeff Smith is working dawg!ABDsaveurself");
         npcBot:Action_UseAbility( abilityBT ); 
         return;
     end
  
     if ( castMCDesire > 0 )
     then
-	    print("Jeff Smith is working dawg!ABDcastMC")
+	    print("Jeff Smith is working dawg!ABDcastMC");
         npcBot:Action_UseAbilityOnEntity( abilityMC, castMCTarget );
         return;
     end
@@ -122,7 +122,7 @@ function ConsiderAphoticShield()
 	--If we can't cast Aphotic Shield, do nothing at all
     if ( not abilityAS:IsFullyCastable() )
     then
-	print("Jeff Smith is working dawg!ABDstopAS")
+	print("Jeff Smith is working dawg!ABDstopAS");
         return BOT_ACTION_DESIRE_NONE, 0;
     end
 
@@ -148,7 +148,7 @@ function ConsiderAphoticShield()
     then
         if ( npcTarget:GetHealth() <= 400 and UnitToUnitDistance( npcTarget, npcBot ) <= ( ASCastRange ) )
         then
-		    print("Jeff Smith is working dawg!ABDsaveally")
+		    print("Jeff Smith is working dawg!ABDsaveally");
             return BOT_ACTION_DESIRE_VERYHIGH, npcTarget;
         end
     end
@@ -169,7 +169,7 @@ function ConsiderAphoticShield()
 		--I want to use this code! Where should we put it? Leave enemy no chance to kill!
 		--OMG That's a bad finding I think we should add it in ability_item_usage_general!
         then
-		    print("Jeff Smith is working dawg!ABDdebuff")
+		    print("Jeff Smith is working dawg!ABDdebuff");
 			return BOT_ACTION_DESIRE_VERYHIGH, npcAlly;
         end
 	end
@@ -188,14 +188,14 @@ function ConsiderMistCoil()
 	--If we want to cast aphotic shield more, do nothing at all
 	if ( castASDesire > 0 ) 
      then
-	       print("Jeff Smith is working dawg!ABDstopMC")
+	       print("Jeff Smith is working dawg!ABDstopMC");
            return BOT_ACTION_DESIRE_NONE, 0;
      end;
 
     --if abaddon's health is low and enemy is insight, deny himself by casting Mist Coil on enemy 
 	if ( npcBot:GetHealth() <= 150 and UnitToUnitDistance( npcTarget, npcBot ) <= ( MCCastRange ) ) 
     then
-	    print("Jeff Smith is working dawg!ABDkillurself!")
+	    print("Jeff Smith is working dawg!ABDkillurself!");
         return BOT_ACTION_DESIRE_VERYHIGH, npcTarget;
     end
 	
@@ -207,7 +207,7 @@ function ConsiderMistCoil()
 	    if ( npcAlly:GetHealth() <= 300 and npcBot:GetHealth() / npcBot:GetMaxHealth() > 0.8 
 			and npcBot:GetMana() / npcBot:GetMaxMana() > 0.65 )
         then
-		        print("Jeff Smith is working dawg!ABDhealally")
+		        print("Jeff Smith is working dawg!ABDhealally");
 		        return BOT_ACTION_DESIRE_MEDIUM, npcAlly;
 		end
 	end
@@ -222,7 +222,7 @@ function ConsiderMistCoil()
 		local botHasMana = npcBot:GetMana() / npcBot:GetMaxMana() > 0.65;
 		if ( npcTarget ~= nil and CanCastSpellOnTarget( npcTarget ) and botHasMana )
         then
-			    print("Jeff Smith is working dawg!ABDdamage")
+			    print("Jeff Smith is working dawg!ABDdamage");
                 return BOT_ACTION_DESIRE_MEDIUM, npcTarget;
 		end
 	end
@@ -230,7 +230,7 @@ function ConsiderMistCoil()
 	--If Mist Coil can kill or badly would an enemy, go for it
 	if ( npcTarget:GetHealth() < MCDamage + 100 ) 
 	then
-	    print("Jeff Smith is working dawg!ABDdecapitate")
+	    print("Jeff Smith is working dawg!ABDdecapitate");
 		return BOT_ACTION_DESIRE_HIGH, npcTarget; 
 	end
 		
@@ -249,7 +249,7 @@ function ConsiderMistCoil()
 		then
 			if ( npcBot:GetHealth() / npcBot:GetMaxHealth() > 0.8 and npcBot:GetMana() / npcBot:GetMaxMana() > 0.6 )
 			then
-			    print("Jeff Smith is working dawg!ABDinterfere")
+			    print("Jeff Smith is working dawg!ABDinterfere");
 				return BOT_ACTION_DESIRE_MEDIUM, npcTarget; 
 			end
 		end
