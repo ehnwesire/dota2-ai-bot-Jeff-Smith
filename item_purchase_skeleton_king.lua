@@ -14,9 +14,8 @@ local ItemsToBuy =
     "item_boots",
     "item_gloves",
     "item_belt_of_strength", -- power treads!
-    "item_blight_stone", -- problematic!
-    "item_mithril_hammer",
-    "item_mithril_hammer", -- desolator
+    "item_relic",
+	"item_recipe_radiance", --"item_radiance"
     "item_mithril_hammer",
     "item_ogre_axe",
     "item_recipe_black_king_bar", --BKB
@@ -30,12 +29,12 @@ local ItemsToBuy =
     "item_belt_of_strength",
     "item_recipe_basher",
     "item_hyperstone",
-    "item_recipe_mjollnir",
+    "item_recipe_mjollnir", --mjollnir
     "item_vitality_booster",
     "item_ring_of_health",
-    "item_recipe_abyssal_balde",
+    "item_recipe_abyssal_blade",--abyssal blade
     "item_hyperstone",
-    "item_hyperstone", --Moon shard!
+    "item_hyperstone", --Moon shard! consumed.
 }
 
 function ItemPurchaseThink()
