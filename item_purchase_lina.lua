@@ -8,33 +8,33 @@
 
 local ItemsToBuy = 
 { 
-	"item_tango",
-	"item_clarity",
-	"item_branches",
-	"item_branches",
-	"item_wind_lace",
-	"item_bottle",
-	"item_boots",
-	"item_magic_stick",
-	"item_enchanted_mango",
-	"item_energy_booster",			
+	"item_faerie_fire",
+	"item_circlet",
+	"item_mantle",
+	"item_recipe_null_talisman",-- nil Talisman
+    "item_boots",
+    "item_blades_of_attack",
+	"item_blades_of_attack", --"item_phase_boots"
+	"item_shadow_amulet",
+	"item_claymore", --shadow blade
+	"item_ring_of_health",
 	"item_void_stone",
-	"item_energy_booster",
-	"item_recipe_aether_lens",
-	"item_staff_of_wizardry",
-	"item_void_stone",
-	"item_recipe_cyclone",			
+	"item_vitality_booster",			
 	"item_point_booster",
-	"item_staff_of_wizardry",
-	"item_ogre_axe",
-	"item_blade_of_alacrity",		
-	"item_platemail",
-	"item_mystic_staff",
-	"item_recipe_shivas_guard",	
-	"item_point_booster",
-	"item_vitality_booster",
-	"item_energy_booster",
-	"item_mystic_staff",			
+	"item_energy_booster",--bloodstone
+	"item_blight_stone",
+	"item_mithril_hammer",
+	"item_mithril_hammer",--desolator
+    "item_gloves",
+    "item_mithril_hammer",
+    "item_recipe_maelstrom",
+    "item_hyperstone",
+    "item_recipe_mjollnir", --mjollnir
+    "item_javelin",
+    "item_javelin",
+    "item_hyperstone", -- monkey king bar
+	"item_ultimate_orb",|
+	"item_recipe_silver_edge", --Shadow blade converted into Silver Edge
 }
 
 function ItemPurchaseThink()
