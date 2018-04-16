@@ -260,7 +260,47 @@ end
 
 
 ----------------------------------------------------------------------------------------------------
- 
+--LevelUpUrAbility!
+
+	 local AbilityToUpgrade = {
+"abaddon_aphotic_shield",
+"abaddon_frostmourne", --frostmourne is Curse of Avernus as abaddon skill 3
+"abaddon_aphotic_shield",
+"abaddon_frostmourne",
+"abaddon_aphotic_shield",
+"abaddon_borrowed_time", -- Lv6
+"abaddon_aphotic_shield",
+"abaddon_frostmourne",
+"abaddon_frostmourne",
+"special_bonus_exp_boost_20",-- "special_bonus_movement_speed_25"
+"abaddon_death_coil",
+"abaddon_borrowed_time", -- Lv12
+"abaddon_death_coil",
+"abaddon_death_coil",
+"special_bonus_armor_6",-- "special_bonus_unique_abaddon_2" unique2 is +60 mist coil heal/damage
+"abaddon_death_coil",
+"abaddon_borrowed_time", -- Lv18
+"special_bonus_attack_damage_90",-- "special_bonus_cooldown_reduction_20"
+"special_bonus_unique_abaddon"-- ""special_bonus_unique_abaddon_3""    unique is +225 aphotic shield health   unique3 is +25% frostmourne attack n move slow
+};
+
+function AbilityLevelUpThink() 
+
+if ( #AbilityToUpgrade == 0 ) then
+return;
+end
+
+local npcBot = GetBot();
+  if (npcBot:GetAbilityPoints() > 0) then 
+  local sNextAbility = npcBot:GetAbilityByName(AbilityToUpgrade[1])
+    if (sNextAbility~=nil and sNextAbility:CanAbilityBeUpgraded() and sNextAbility:GetLevel() < sNextAbility:GetMaxLevel()) then
+    npcBot:Action_Chat(AbilityToUpgrade[1],true);
+    npcBot:Action_LevelAbility(AbilityToUpgrade[1])
+table.remove( AbilityToUpgrade, 1 )
+    end	
+  end
+end
+----------------------------------------------------------------------------------------------------
 --function ConsiderBorrowedTime()  -- This skill regens every damage absorbed.
 --The condition we use this actively: 
 --we estimate upcoming damage, if it will be really high, we triger ultimate actively to absorb all the damage.

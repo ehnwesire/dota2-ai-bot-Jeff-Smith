@@ -236,3 +236,44 @@ local BHDamage = math.floor ( nEstimatedDamageToTarget );
 		
      return BOT_ACTION_DESIRE_NONE, 0;
 end
+----------------------------------------------------------------------------------------------------
+--LevelUpUrAbility!
+
+	 local AbilityToUpgrade = {
+"axe_counter_helix",
+"axe_berserkers_call",
+"axe_counter_helix",
+"axe_berserkers_call",
+"axe_counter_helix",
+"axe_culling_blade", -- Lv6
+"axe_counter_helix",
+"axe_berserkers_call",
+"axe_berserkers_call",
+"special_bonus_strength_8",-- "special_bonus_attack_speed_40"
+"axe_battle_hunger",
+"axe_culling_blade", -- Lv12
+"axe_battle_hunger",
+"axe_battle_hunger",
+"special_bonus_mp_regen_3",-- "special_bonus_movement_speed_40"
+"axe_battle_hunger",
+"axe_culling_blade", -- Lv18
+"special_bonus_hp_regen_20",-- "special_bonus_unique_axe_3"      unique3 is attacking procs counter helix
+"special_bonus_unique_axe_2"-- ""special_bonus_unique_axe""    unique 2 is +100 berserker call AoE   unique is +120 battle hunger DPS
+};
+
+function AbilityLevelUpThink() 
+
+if ( #AbilityToUpgrade == 0 ) then
+return;
+end
+
+local npcBot = GetBot();
+  if (npcBot:GetAbilityPoints() > 0) then 
+  local sNextAbility = npcBot:GetAbilityByName(AbilityToUpgrade[1])
+    if (sNextAbility~=nil and sNextAbility:CanAbilityBeUpgraded() and sNextAbility:GetLevel() < sNextAbility:GetMaxLevel()) then
+    npcBot:Action_Chat(AbilityToUpgrade[1],true);
+    npcBot:Action_LevelAbility(AbilityToUpgrade[1])
+table.remove( AbilityToUpgrade, 1 )
+    end	
+  end
+end

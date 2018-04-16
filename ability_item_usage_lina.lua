@@ -298,3 +298,44 @@ function ConsiderLagunaBlade()
 
 end
 
+----------------------------------------------------------------------------------------------------
+--LevelUpUrAbility!
+
+	 local AbilityToUpgrade = {
+"lina_dragon_slave",
+"lina_fiery_soul", 
+"lina_dragon_slave",
+"lina_light_strike_array",
+"lina_dragon_slave",
+"lina_laguna_blade", -- Lv6
+"lina_dragon_slave",
+"lina_light_strike_array",
+"lina_light_strike_array",
+"special_bonus_attack_damage_30",-- "special_bonus_cast_range_125"
+"lina_light_strike_array",
+"lina_laguna_blade", -- Lv12
+"lina_fiery_soul",
+"lina_fiery_soul",
+"special_bonus_unique_lina_3",-- "special_bonus_hp_350" unique3 is +140 light strike array damage
+"lina_fiery_soul",
+"lina_laguna_blade", -- Lv18
+"special_bonus_unique_lina_2",-- "special_bonus_spell_amplify_12" unique2 is +25attack speed/2% move speed Fiery Soul per stack
+"special_bonus_attack_range_175",--"special_bonus_unique_lina_1" unique 1 is -6s dragon slave cooldown
+};
+
+function AbilityLevelUpThink() 
+
+if ( #AbilityToUpgrade == 0 ) then
+return;
+end
+
+local npcBot = GetBot();
+  if (npcBot:GetAbilityPoints() > 0) then 
+  local sNextAbility = npcBot:GetAbilityByName(AbilityToUpgrade[1])
+    if (sNextAbility~=nil and sNextAbility:CanAbilityBeUpgraded() and sNextAbility:GetLevel() < sNextAbility:GetMaxLevel()) then
+    npcBot:Action_Chat(AbilityToUpgrade[1],true);
+    npcBot:Action_LevelAbility(AbilityToUpgrade[1])
+table.remove( AbilityToUpgrade, 1 )
+    end	
+  end
+end

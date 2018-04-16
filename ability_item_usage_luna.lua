@@ -123,3 +123,44 @@ function ConsiderEclipse()
 	return BOT_ACTION_DESIRE_NONE;
 	
 end
+----------------------------------------------------------------------------------------------------
+--LevelUpUrAbility!
+
+	 local AbilityToUpgrade = {
+"luna_lunar_blessing",
+"luna_lucent_beam",
+"luna_lucent_beam",
+"luna_moon_glaive",
+"luna_lucent_beam",
+"luna_eclipse", -- Lv6
+"luna_lucent_beam",
+"luna_moon_glaive",
+"luna_moon_glaive",
+"special_bonus_attack_speed_20",-- "special_bonus_cast_range_200"
+"luna_moon_glaive",
+"luna_eclipse", -- Lv12
+"luna_lunar_blessing",
+"luna_lunar_blessing",
+"special_bonus_unique_luna_3",-- "special_bonus_unique_luna_2" unique3 is +24 damage   unique2 is -4s Lucent Beam Cooldown
+"luna_lunar_blessing",
+"luna_eclipse", -- Lv18
+"special_bonus_all_stats_10",-- "special_bonus_unique_luna_1" unique1 is +100 lucent beam damage
+"special_bonus_lifesteal_25"-- ""special_bonus_unique_luna_5""    unique5 is +0.25s eclipse lucent beam ministun
+};
+
+function AbilityLevelUpThink() 
+
+if ( #AbilityToUpgrade == 0 ) then
+return;
+end
+
+local npcBot = GetBot();
+  if (npcBot:GetAbilityPoints() > 0) then 
+  local sNextAbility = npcBot:GetAbilityByName(AbilityToUpgrade[1])
+    if (sNextAbility~=nil and sNextAbility:CanAbilityBeUpgraded() and sNextAbility:GetLevel() < sNextAbility:GetMaxLevel()) then
+    npcBot:Action_Chat(AbilityToUpgrade[1],true);
+    npcBot:Action_LevelAbility(AbilityToUpgrade[1])
+table.remove( AbilityToUpgrade, 1 )
+    end	
+  end
+end
