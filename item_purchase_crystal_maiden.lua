@@ -12,28 +12,15 @@ local ItemsToBuy =
     "item_tango",
     "item_clarity",
     "item_boots",
-    "item_energy_booster", --arcane boots
-    "item_shadow_amulet",
-    "item_cloak", -- glimmer cape
     "item_ring_of_regen",
-    "item_branches",
-    "item_recipe_headdress",
-    "item_chainmail",
-    "item_branches",
-    "item_recipe_buckler", -- get buckler
-    "item_recipe_mekansm",
-    "item_energy_booster",
-    "item_void_stone",
-    "item_recipe_aether_lens",
-    "item_staff_of_wizardry",
-    "item_wind_lace",
-    "item_void_stone",
-    "item_recipe_cyclone",
-    "item_recipe_guardian_greaves",
-    "item_chainmail",
-    "item_sobi_mask",
-    "item_blight_stone", -- problematic!
-    "item_talisman_of_evasion", --solar crest
+    "item_wind_lace", --get tranquil boots
+    "item_shadow_amulet",
+    "item_cloak", -- glimmer cape  
+    "item_blink",
+    "item_ogre_axe",
+    "item_point_booster",
+    "item_blade_of_alacrity",
+    "item_staff_of_wizardry", --"item_ultimate_scepter"
     "item_staff_of_wizardry",
     "item_circlet",
     "item_gauntlets",
@@ -42,6 +29,12 @@ local ItemsToBuy =
     "item_gauntlets",
     "item_recipe_racer",
     "item_recipe_rod_of_atos",
+	"item_ogre_axe",
+	"item_mithril_hammer",
+	"item_recipe_black_king_bar", -- black king bar
+	"item_boots",--decombine tranquil if possible.
+	"item_recipe_travel_boots",
+	"item_recipe_travel_boots",-- level 2 boots of travel  replace tranquil boots
 }
 
 function ItemPurchaseThink()

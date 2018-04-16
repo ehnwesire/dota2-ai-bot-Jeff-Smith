@@ -28,7 +28,7 @@ local ItemsToBuy =
     "item_reaver",
     "item_vitality_booster",
     "item_vitality_booster", -- The Heart!
-	"item_boots",--decombine phase boots if possible.
+	"item_boots",--decombine tranquilboots if possible.
 	"item_recipe_travel_boots",
 	"item_recipe_travel_boots",-- level 2 boots of travel  replace tranquil boots
 
