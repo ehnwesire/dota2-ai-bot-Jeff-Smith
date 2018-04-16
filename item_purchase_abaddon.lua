@@ -32,7 +32,7 @@ local ItemsToBuy =
     "item_point_booster",
     "item_blade_of_alacrity",
     "item_staff_of_wizardry", --"item_ultimate_scepter"
-	"item_boots" --decombine phase boots if possible.
+	"item_boots",---decombine phase boots if possible.
 	"item_recipe_travel_boots",
 	"item_recipe_travel_boots",-- level 2 boots of travel
     "item_hyperstone",

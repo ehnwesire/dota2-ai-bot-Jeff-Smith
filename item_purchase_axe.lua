@@ -4,10 +4,10 @@ local ItemsToBuy =
 { 
 	"item_stout_shield", --Do not sell it 
     "item_tango",
-    "item_tango",
+	"item_tango",
 	"item_boots",
     "item_ring_of_regen",
-    "item_wind_lace", --not sure if this code’s right.  We should get tranquil boots
+    "item_wind_lace", --not sure if this code’s right.  We should get tranquil boots from here
     "item_blink",
     "item_broadsword",
     "item_chainmail",
@@ -17,13 +17,21 @@ local ItemsToBuy =
     "item_chainmail",
     "item_branches",
     "item_recipe_buckler", -- get buckler
-    "item_recipe_crimson_guard", --use buckler and vanguard to make crimson guard
-    "item_mystic_staff",
-    "item_platemail",
-    "item_recipe_shivas_guard", -- Shivas guards done.
+    "item_recipe_crimson_guard", --use buckler and vanguard to get crimson guard
+	"item_ring_of_health",
+	"item_cloak",
+	"item_ring_of_regen", -- get hood of defiance
+    "item_ring_of_regen",
+	"item_branches",
+	"item_recipe_headdress", -- get headdress
+	"item_recipe_pipe", -- pipe of insight
     "item_reaver",
     "item_vitality_booster",
     "item_vitality_booster", -- The Heart!
+	"item_boots",--decombine phase boots if possible.
+	"item_recipe_travel_boots",
+	"item_recipe_travel_boots",-- level 2 boots of travel  replace tranquil boots
+
 }
 
 function ItemPurchaseThink()
