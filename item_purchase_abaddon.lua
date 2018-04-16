@@ -10,27 +10,31 @@ local ItemsToBuy =
 { 
     "item_tango",
     "item_stout_shield",
+    "item_branches",
     "item_boots",
     "item_blades_of_attack",
 	"item_blades_of_attack", --"item_phase_boots"
-    "item_gloves",
-	"item_recipe_hand_of_midas", --"item_hand_of_midas"
+    "item_ring_of_regen",
+	"item_recipe_headdress", -- headdress
+	"item_sobi_mask", --this is Sage's Mask
+	"item_ring_of_protection",
+	"item_lifesteal", -- this is morbid mask   and now combined into vladmir's offering
     "item_relic",
 	"item_recipe_radiance", --"item_radiance"
-	"item_vitality_booster", 
-	"item_point_booster",
-	"item_energy_booster", --"item_octarine_core"
-    "item_mystic_staff",
+	"item_broadsword", 
+	"item_chainmail",
+	"item_robe", -- combined into Blademail
+    "item_hyperstone",
 	"item_platemail",
-	"item_recipe_shivas_guard", --"item_shivas_guard",
-    "item_chainmail",
-    "item_sobi_mask",
-    "item_blight_stone", --"item_medallion_of_courage",
-    "item_talisman_of_evasion", --"item_solar_crest",
+	"item_chainmail",
+	"item_recipe_assault", --"item_assault",
     "item_ogre_axe",
     "item_point_booster",
     "item_blade_of_alacrity",
     "item_staff_of_wizardry", --"item_ultimate_scepter"
+	"item_boots" --decombine phase boots if possible.
+	"item_recipe_travel_boots",
+	"item_recipe_travel_boots",-- level 2 boots of travel
     "item_hyperstone",
     "item_hyperstone", --"item_moon shard" consumable
 }
