@@ -247,3 +247,44 @@ function ConsiderMortalStrike()
 	end
 	
 end
+----------------------------------------------------------------------------------------------------
+--LevelUpUrAbility!
+
+	 local AbilityToUpgrade = {
+"skeleton_king_hellfire_blast",
+"skeleton_king_mortal_strike",
+"skeleton_king_hellfire_blast",
+"skeleton_king_vampiric_aura",
+"skeleton_king_hellfire_blast",
+"skeleton_king_reincarnation", -- Lv6
+"skeleton_king_hellfire_blast",
+"skeleton_king_mortal_strike",
+"skeleton_king_mortal_strike",
+"special_bonus_attack_speed_20",-- "special_bonus_unique_wraith_king_3" unique3 is +40 Wraithfire DPS
+"skeleton_king_mortal_strike",
+"skeleton_king_reincarnation", -- Lv12
+"skeleton_king_vampiric_aura",
+"skeleton_king_vampiric_aura",
+"special_bonus_strength_15",-- "special_bonus_unique_wraith_king_6" unique6 is +25 skeletons attack damage
+"skeleton_king_vampiric_aura",
+"skeleton_king_reincarnation", -- Lv18
+"special_bonus_unique_wraith_king_1",-- "special_bonus_unique_wraith_king_8" 1 is no reincarnation manacost   8 is 2x skeleton spawned
+"special_bonus_unique_wraith_king_4"-- ""special_bonus_unique_wraith_king_2"" 4 is reincarnation casts Wraithfire   2 is +25% aura lifesteal
+};
+
+function AbilityLevelUpThink() 
+
+if ( #AbilityToUpgrade == 0 ) then
+return;
+end
+
+local npcBot = GetBot();
+  if (npcBot:GetAbilityPoints() > 0) then 
+  local sNextAbility = npcBot:GetAbilityByName(AbilityToUpgrade[1])
+    if (sNextAbility~=nil and sNextAbility:CanAbilityBeUpgraded() and sNextAbility:GetLevel() < sNextAbility:GetMaxLevel()) then
+    npcBot:Action_Chat(AbilityToUpgrade[1],true);
+    npcBot:Action_LevelAbility(AbilityToUpgrade[1])
+table.remove( AbilityToUpgrade, 1 )
+    end	
+  end
+end
