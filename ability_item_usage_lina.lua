@@ -333,9 +333,8 @@ local npcBot = GetBot();
   if (npcBot:GetAbilityPoints() > 0) then 
   local sNextAbility = npcBot:GetAbilityByName(AbilityToUpgrade[1])
     if (sNextAbility~=nil and sNextAbility:CanAbilityBeUpgraded() and sNextAbility:GetLevel() < sNextAbility:GetMaxLevel()) then
-    npcBot:Action_Chat(AbilityToUpgrade[1],true);
-    npcBot:Action_LevelAbility(AbilityToUpgrade[1])
-table.remove( AbilityToUpgrade, 1 )
+    npcBot:ActionImmediate_LevelAbility(AbilityToUpgrade[1])
+	table.remove( AbilityToUpgrade, 1 )
     end	
   end
 end

@@ -29,7 +29,7 @@ function AbilityUsageThink()
 	end
 	if ( castLBDesire > 0)
 	then 
-		npcBot:Action_UseAbilityOnEntitiy( abilityLB, castLBTarget );
+		npcBot:Action_UseAbilityOnEntity( abilityLB, castLBTarget );
 	end
 
 end
@@ -37,7 +37,11 @@ end
 ----------------------------------------------------------------------------------------------------
 
 function CanCastLucentBeamOnTarget()
-	return  npcTarget:CanBeSeen() and not npcTarget:IsMagicImmune() and not npcTarget:IsInvulnerable();
+
+	local npcBot = GetBot();
+	local npcTarget = npcBot:GetTarget();
+	return npcTarget:CanBeSeen() and not npcTarget:IsMagicImmune() and not npcTarget:IsInvulnerable();
+	
 end
 
 ----------------------------------------------------------------------------------------------------
@@ -126,7 +130,7 @@ end
 ----------------------------------------------------------------------------------------------------
 --LevelUpUrAbility!
 
-	 local AbilityToUpgrade = {
+	local AbilityToUpgrade = {
 "luna_lunar_blessing",
 "luna_lucent_beam",
 "luna_lucent_beam",
@@ -158,9 +162,8 @@ local npcBot = GetBot();
   if (npcBot:GetAbilityPoints() > 0) then 
   local sNextAbility = npcBot:GetAbilityByName(AbilityToUpgrade[1])
     if (sNextAbility~=nil and sNextAbility:CanAbilityBeUpgraded() and sNextAbility:GetLevel() < sNextAbility:GetMaxLevel()) then
-    npcBot:Action_Chat(AbilityToUpgrade[1],true);
-    npcBot:Action_LevelAbility(AbilityToUpgrade[1])
-table.remove( AbilityToUpgrade, 1 )
+    npcBot:ActionImmediate_LevelAbility(AbilityToUpgrade[1])
+	table.remove( AbilityToUpgrade, 1 )
     end	
   end
 end

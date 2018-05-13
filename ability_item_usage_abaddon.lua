@@ -60,21 +60,22 @@ function AbilityUsageThink()
 	end;
 
 	--Getting the handles to abadoon's three abilities 
-    abilityMC = npcBot:GetAbilityByName( "abaddon_mist_coil" ); 
+    abilityMC = npcBot:GetAbilityByName( "abaddon_death_coil" ); 
     abilityAS = npcBot:GetAbilityByName( "abaddon_aphotic_shield" );
     abilityBT = npcBot:GetAbilityByName( "abaddon_borrowed_time" );
     
     castMCDesire, castMCTarget = ConsiderMistCoil();
     castASDesire, castASTarget = ConsiderAphoticShield();
-    castBTDesire= ConsiderBorrowedTime(); 
- 
+    --castBTDesire = ConsiderBorrowedTime(); 
+	--Just let the bot go by itself!
+	
 	--Considering to cast aphotic shield with a higher priority because it saves life
-	if ( castASDesire > castBTDesire and castASDesire > castMCDesire )
+	--[[ if ( castASDesire > castBTDesire and castASDesire > castMCDesire )
     then
 	    print("Jeff Smith is working dawg!ABDcastAS");
 		npcBot:Action_UseAbilityOnEntity( abilityAS, castASTarget );
         return;
-    end
+    end --]]
  
 	--Triggering borrowed time when Abaddon is in danger or needs to do so
 	--OK, how about we take the getEstimatedDamage into consideration here? 
@@ -85,7 +86,7 @@ function AbilityUsageThink()
         return;
     end
  
-    if ( castMCDesire > 0 )
+    if ( castMCDesire > 0.1 )
     then
 	    print("Jeff Smith is working dawg!ABDcastMC");
         npcBot:Action_UseAbilityOnEntity( abilityMC, castMCTarget );
@@ -119,6 +120,7 @@ function ConsiderAphoticShield()
 	local npcTarget = npcBot:GetTarget();
 	local ASCastRange = abilityAS:GetCastRange()
 	
+	if npcTarget~=nil then return BOT_ACTION_DESIRE_NONE, 0; end
 	--If we can't cast Aphotic Shield, do nothing at all
     if ( not abilityAS:IsFullyCastable() )
     then
@@ -186,11 +188,11 @@ function ConsiderMistCoil()
 	local MCDamage = abilityMC:GetAbilityDamage();
 	
 	--If we want to cast aphotic shield more, do nothing at all
-	if ( castASDesire > 0 ) 
+	--[[ if ( castASDesire > 0 ) 
      then
 	       print("Jeff Smith is working dawg!ABDstopMC");
            return BOT_ACTION_DESIRE_NONE, 0;
-     end;
+     end; --]]
 
     --if abaddon's health is low and enemy is insight, deny himself by casting Mist Coil on enemy 
 	if ( npcBot:GetHealth() <= 150 and UnitToUnitDistance( npcTarget, npcBot ) <= ( MCCastRange ) ) 
@@ -199,6 +201,7 @@ function ConsiderMistCoil()
         return BOT_ACTION_DESIRE_VERYHIGH, npcTarget;
     end
 	
+	local nRadius = abilityMC:GetCastRange()
 	--Use skill to heal wounded allies when Abaddon's health is in a good shape. 
 	--Also makes sure of keeping abaddon's mana good (?)
     local tableLowHealthAllies = npcBot:GetNearbyHeroes( nRadius, false, BOT_MODE_NONE );
@@ -212,7 +215,7 @@ function ConsiderMistCoil()
 		end
 	end
 	
-    local nRadius = abilityMC:GetCastRange()
+
 	--if we are roaming to gank an enemy, cast Mist Coil on them to deal damage 
 	--Also making sure of that abadoon has enough mana 
     if (  npcBot:GetActiveMode() == BOT_MODE_ROAM or
@@ -227,12 +230,13 @@ function ConsiderMistCoil()
 		end
 	end
 	
-	--If Mist Coil can kill or badly would an enemy, go for it
-	if ( npcTarget:GetHealth() < MCDamage + 100 ) 
+	--[[If Mist Coil can kill or badly would an enemy, go for it
+	local npcTarget = npcBot:GetTarget();
+	if ( npcBot:GetTarget():GetHealth() < MCDamage + 100 ) 
 	then
 	    print("Jeff Smith is working dawg!ABDdecapitate");
 		return BOT_ACTION_DESIRE_HIGH, npcTarget; 
-	end
+	end--]]
 		
 	--if the enemy's health is more than 60%, and our mana is more than 60% & Health more than 80%, 
 	--cast it on the enemy as an inflict of damage
@@ -245,6 +249,8 @@ function ConsiderMistCoil()
         npcBot:GetActiveMode() == BOT_MODE_DEFEND_TOWER_MID or
         npcBot:GetActiveMode() == BOT_MODE_DEFEND_TOWER_TOP )
 	then
+		--[[ local enemyHP = npcTarget:GetHealth();
+		if (enemyHP=nil) then return;
 		if ( npcTarget:GetHealth() / npcTarget:GetMaxHealth() > 0.6 )
 		then
 			if ( npcBot:GetHealth() / npcBot:GetMaxHealth() > 0.8 and npcBot:GetMana() / npcBot:GetMaxMana() > 0.6 )
@@ -253,9 +259,11 @@ function ConsiderMistCoil()
 				return BOT_ACTION_DESIRE_MEDIUM, npcTarget; 
 			end
 		end
+		]]--
+		return BOT_ACTION_DESIRE_MEDIUM, npcTarget;
 	end	
 		
-    return BOT_ACTION_DESIRE_NONE, 0;
+    return BOT_ACTION_DESIRE_MEDIUM, 0;
 end
 
 
@@ -293,9 +301,9 @@ end
 local npcBot = GetBot();
   if (npcBot:GetAbilityPoints() > 0) then 
   local sNextAbility = npcBot:GetAbilityByName(AbilityToUpgrade[1])
-    if (sNextAbility~=nil and sNextAbility:CanAbilityBeUpgraded() and sNextAbility:GetLevel() < sNextAbility:GetMaxLevel()) then
-    npcBot:Action_Chat(AbilityToUpgrade[1],true);
-    npcBot:Action_LevelAbility(AbilityToUpgrade[1])
+    if (sNextAbility~=nil and sNextAbility:CanAbilityBeUpgraded() and sNextAbility:GetLevel() < sNextAbility:GetMaxLevel())
+	then
+    npcBot:ActionImmediate_LevelAbility(AbilityToUpgrade[1])
 table.remove( AbilityToUpgrade, 1 )
     end	
   end
