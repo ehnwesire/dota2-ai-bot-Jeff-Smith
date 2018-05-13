@@ -26,7 +26,8 @@ function AbilityUsageThink()
     castBHDesire, castBHTarget = ConsiderBattleHunger();
     castCBDesire, castCBTarget = ConsiderCullingBlade();
  
-    then
+	if ( castCBDesire > 0 ) 
+	then
 		npcBot:Action_UseAbilityOnEntity( abilityCB, castCBTarget );
         return;
     end
@@ -105,9 +106,9 @@ function ConsiderBerserkersCall()
 
 local npcBot = GetBot();
  
-     if ( not abilityBC:IsFullyCastable() ) then
-           return BOT_ACTION_DESIRE_NONE, 0;
-     end;
+    if ( not abilityBC:IsFullyCastable() ) then
+        return BOT_ACTION_DESIRE_NONE;
+    end;
  
  
      local nRadius = abilityBC:GetSpecialValueInt( "berserkers_call_aoe" );
@@ -164,7 +165,7 @@ local npcBot = GetBot();
            end
      end
  
-     return BOT_ACTION_DESIRE_NONE, 0;
+     return BOT_ACTION_DESIRE_NONE;
 	 
 	end
 end
@@ -229,7 +230,7 @@ local BHDamage = math.floor ( nEstimatedDamageToTarget );
 		 then
 			if ( npcBot:GetMana() / npcBot:GetMaxMana() > 0.8)
 			then
-				return BOT_ACTION_DESIRE_MEDIUM, npcTarge; 
+				return BOT_ACTION_DESIRE_MEDIUM, npcTarget; 
 			end
 		end
 	 end	
@@ -271,9 +272,8 @@ local npcBot = GetBot();
   if (npcBot:GetAbilityPoints() > 0) then 
   local sNextAbility = npcBot:GetAbilityByName(AbilityToUpgrade[1])
     if (sNextAbility~=nil and sNextAbility:CanAbilityBeUpgraded() and sNextAbility:GetLevel() < sNextAbility:GetMaxLevel()) then
-    npcBot:Action_Chat(AbilityToUpgrade[1],true);
-    npcBot:Action_LevelAbility(AbilityToUpgrade[1])
-table.remove( AbilityToUpgrade, 1 )
+    npcBot:ActionImmediate_LevelAbility(AbilityToUpgrade[1])
+	table.remove( AbilityToUpgrade, 1 )
     end	
   end
 end
